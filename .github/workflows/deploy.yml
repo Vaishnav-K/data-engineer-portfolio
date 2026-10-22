@@ -1,0 +1,72 @@
+name: Deploy Data Engineer Portfolio to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out portfolio website
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Refresh measured demo metrics
+        run: |
+          python3 - <<'PY'
+          import csv
+          import io
+          import json
+          import urllib.request
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          source_base = "https://raw.githubusercontent.com/Vaishnav-K/ai-enhanced-banking-data-platform/main/data/raw"
+          sources = {
+              "customers": ("customers.csv", "customers.csv"),
+              "transactions": ("transactions.csv", "transactions.csv"),
+          }
+          metrics = {
+              "generated_at": datetime.now(timezone.utc).isoformat(),
+              "source": "measured from the public synthetic CSV inputs in the separate banking data project",
+          }
+
+          for key, (filename, label) in sources.items():
+              url = f"{source_base}/{filename}"
+              request = urllib.request.Request(url, headers={"User-Agent": "portfolio-metrics-build"})
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  payload = response.read()
+              rows = sum(1 for _ in csv.DictReader(io.StringIO(payload.decode("utf-8"))))
+              metrics[key] = {"rows": rows, "bytes": len(payload)}
+
+          metrics["total_bytes"] = metrics["customers"]["bytes"] + metrics["transactions"]["bytes"]
+          output = Path("site/data/pipeline-metrics.json")
+          output.parent.mkdir(parents=True, exist_ok=True)
+          output.write_text(json.dumps(metrics, indent=2) + "\\n", encoding="utf-8")
+          print(json.dumps(metrics, indent=2))
+          PY
+
+      - name: Upload website artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4
