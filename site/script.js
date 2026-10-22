@@ -308,42 +308,58 @@ filterButtons.forEach((button) => {
   });
 })(); 
 
-/* Subtle section entrance and ambient parallax. Kept gentle and disabled for reduced-motion users. */
+/* Scroll reveal + layered background parallax. Respect reduced-motion preferences. */
 (() => {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const targets=Array.from(document.querySelectorAll(".section-block, .proof-strip, .contact-section"));
+  const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (motionPreference.matches) return;
+
+  const targets = Array.from(document.querySelectorAll(
+    "main > .section-block, main > .proof-strip, main > .contact-section"
+  ));
+
   if ("IntersectionObserver" in window) {
     document.documentElement.classList.add("has-scroll-motion");
-    const observer=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
           entry.target.classList.add("is-visible");
           observer.unobserve(entry.target);
         }
       });
-    },{threshold:0.08,rootMargin:"0px 0px -4% 0px"});
-    targets.forEach(target=>{
+    }, { threshold: 0.06, rootMargin: "0px 0px -5% 0px" });
+
+    targets.forEach(target => {
       target.classList.add("scroll-reveal");
       observer.observe(target);
     });
-  } else {
-    targets.forEach(target=>target.classList.add("is-visible"));
   }
-  const ambientOne=document.querySelector(".ambient-one");
-  const ambientTwo=document.querySelector(".ambient-two");
-  let framePending=false;
-  const updateParallax=()=>{
-    const offset=window.scrollY || window.pageYOffset || 0;
-    if(ambientOne)ambientOne.style.transform="translate3d(0,"+Math.min(offset*0.09,170)+"px,0)";
-    if(ambientTwo)ambientTwo.style.transform="translate3d(0,"+Math.min(offset*0.045,110)+"px,0)";
-    framePending=false;
+
+  // Move the fixed ambient backdrop more slowly than the page itself.
+  // One shared CSS variable avoids per-element layout work on every scroll.
+  let framePending = false;
+  const updateParallax = () => {
+    const offset = window.scrollY || window.pageYOffset || 0;
+    const reduced = motionPreference.matches;
+    const shift = reduced ? 0 : -Math.min(offset * 0.055, 180);
+    document.documentElement.style.setProperty("--parallax-y", shift + "px");
+    framePending = false;
   };
-  window.addEventListener("scroll",()=>{
-    if(!framePending){
-      framePending=true;
+
+  window.addEventListener("scroll", () => {
+    if (!framePending) {
+      framePending = true;
       window.requestAnimationFrame(updateParallax);
     }
-  },{passive:true});
+  }, { passive: true });
+
+  motionPreference.addEventListener?.("change", event => {
+    if (event.matches) {
+      document.documentElement.classList.remove("has-scroll-motion");
+      document.documentElement.style.setProperty("--parallax-y", "0px");
+      targets.forEach(target => target.classList.remove("scroll-reveal"));
+    }
+  });
+
   updateParallax();
 })();
 
