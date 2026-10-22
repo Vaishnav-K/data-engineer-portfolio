@@ -857,3 +857,221 @@ p{font-size:12px}
     transform: none !important;
   }
 }
+
+
+/* Global readability and visual hierarchy pass — Oct 2026 */
+body {
+  font-size: 15px;
+  line-height: 1.72;
+}
+p { font-size: 15px; line-height: 1.78; }
+.section-block { padding-top: 78px; }
+.section-heading { gap: 24px; margin-bottom: 28px; }
+.section-heading h2,
+.contact-inner h2 {
+  font-size: clamp(34px, 3.1vw, 43px) !important;
+  line-height: 1.16 !important;
+  letter-spacing: -.04em;
+}
+.section-heading > p {
+  font-size: 15px !important;
+  line-height: 1.8 !important;
+  max-width: 490px;
+}
+.eyebrow {
+  font-size: 12px !important;
+  line-height: 1.6;
+  letter-spacing: .09em;
+}
+.hero-copy > .eyebrow { font-size: 13px !important; }
+.hero h1 { font-size: clamp(48px, 5.1vw, 68px); line-height: 1.08; }
+.hero-lead { font-size: 17px !important; line-height: 1.82 !important; }
+.hero-actions .button { font-size: 14px; padding: 13px 18px; }
+.hero-meta .meta-number { font-size: 21px; line-height: 1.3; }
+.hero-meta .meta-label { font-size: 12px !important; line-height: 1.55; }
+.contact-line, .contact-icon-link { font-size: 13px !important; line-height: 1.7; }
+.profile-info { padding: 24px !important; }
+.profile-info h2 { font-size: 29px !important; line-height: 1.2; }
+.profile-info > p { font-size: 15px !important; line-height: 1.6; }
+.profile-info .eyebrow { font-size: 11px !important; }
+.profile-facts { gap: 17px; }
+.profile-facts span { font-size: 11px !important; line-height: 1.5; }
+.profile-facts strong { font-size: 14px !important; line-height: 1.6; }
+.profile-resume { font-size: 14px !important; line-height: 1.5; }
+.visual-note { font-size: 13px !important; line-height: 1.7; }
+.tech-strip-head .tech-strip-label { font-size: 12px !important; line-height: 1.5; }
+.tech-strip-label span { font-size: 12px !important; }
+.tech-strip-head > p { font-size: 13px !important; line-height: 1.6; }
+.technology-chip { font-size: 14px !important; padding: 11px 13px !important; }
+.tech-mini-symbol, .tech-mini-symbol svg { width: 23px; height: 23px; }
+.timeline-date { font-size: 12px !important; line-height: 1.6; }
+.timeline-heading h3 { font-size: 21px !important; line-height: 1.35 !important; }
+.timeline-heading .company { font-size: 14px !important; line-height: 1.65; }
+.timeline-content ul { font-size: 15px !important; line-height: 1.9 !important; }
+.stage-button { font-size: 15px !important; padding: 13px 15px; }
+.stage-button span { font-size: 12px !important; }
+.stage-detail-copy h3 { font-size: 25px !important; line-height: 1.3; }
+.stage-detail-copy p { font-size: 14px !important; line-height: 1.85; }
+.stage-facts span { font-size: 11px !important; }
+.stage-facts strong { font-size: 13px !important; }
+.architecture-footnote { font-size: 12px !important; line-height: 1.7; }
+.scale-kicker { font-size: 12px !important; }
+.scale-panel h3 { font-size: 23px !important; line-height: 1.35; }
+.dataset-kpis span, .dataset-quality-kpis > div > span { font-size: 12px !important; line-height: 1.5; }
+.dataset-kpis strong { font-size: clamp(20px, 2vw, 26px); }
+.scale-caption, .source-note, .scenario-note { font-size: 12px !important; line-height: 1.75 !important; }
+.scale-explorer > p { font-size: 14px !important; line-height: 1.8; }
+.scale-explorer label { font-size: 13px !important; line-height: 1.6; }
+.scale-range-labels { font-size: 11px !important; }
+.estimate-result > span { font-size: 12px !important; }
+.estimate-result > strong { font-size: 29px !important; }
+.estimate-result small, .scale-reference p, .impact-badge small { font-size: 12px !important; line-height: 1.7; }
+.scale-reference > span, .impact-badge > span { font-size: 11px !important; }
+.scale-reference > strong { font-size: 30px !important; }
+.impact-badge strong { font-size: 15px !important; line-height: 1.5; }
+.project-filters { gap: 10px; margin-bottom: 22px; }
+.filter-button { font-size: 13px !important; padding: 11px 15px; min-height: 42px; }
+.project-card { padding: 25px !important; }
+.project-topline > span { font-size: 12px; line-height: 1.6; }
+.project-card h3, .project-card.featured-project h3 { font-size: clamp(25px, 2.5vw, 32px); line-height: 1.2; }
+.project-card > p, .featured-project > p { font-size: 14px !important; line-height: 1.85 !important; }
+.project-tags span, .featured-project-badges span { font-size: 11px; padding: 7px 10px; }
+.project-quality-metrics strong, .featured-project > .metric-row strong { font-size: 24px !important; }
+.project-quality-metrics span, .featured-project > .metric-row span { font-size: 12px !important; line-height: 1.65 !important; }
+.project-details summary { font-size: 13px !important; line-height: 1.6; }
+.project-details p { font-size: 13px !important; line-height: 1.8; }
+.evidence-intro { font-size: 13px !important; line-height: 1.75; }
+.evidence-node, .evidence-s3-visual > div strong, .evidence-airflow-visual .evidence-node { font-size: 11px !important; line-height: 1.5; }
+.evidence-s3-visual > div small, .evidence-quality-visual small { font-size: 11px !important; line-height: 1.55; }
+.evidence-card h4 { font-size: 15px !important; line-height: 1.5; }
+.evidence-card p { font-size: 13px !important; line-height: 1.75; }
+.evidence-card > a { font-size: 12px !important; }
+.project-note { font-size: 12px !important; line-height: 1.7; }
+#skills .section-heading { margin-bottom: 30px; }
+#skills .section-heading h2 { font-size: clamp(36px, 3.3vw, 45px) !important; }
+#skills .section-heading > p { font-size: 15px !important; }
+#skills .skill-grid { gap: 17px !important; }
+#skills .skill-card-trigger {
+  min-height: 92px !important;
+  padding: 18px 17px !important;
+  grid-template-columns: 32px minmax(0, 1fr) 19px !important;
+  column-gap: 12px !important;
+}
+#skills .skill-title {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  font-weight: 700 !important;
+}
+#skills .skill-index { width: 32px; height: 32px; font-size: 11px !important; }
+#skills .skill-chevron { width: 19px; height: 19px; }
+#skills .skill-grid:has(.skill-overlay:not([hidden])) {
+  height: 292px !important;
+  min-height: 292px !important;
+}
+#skills .skill-overlay {
+  gap: 19px;
+  padding: 25px 28px;
+}
+#skills .skill-overlay-heading { gap: 16px; }
+#skills .skill-overlay-heading .skill-index { width: 40px; height: 40px; font-size: 12px; }
+#skills .skill-overlay-heading-label {
+  font-size: 11px !important;
+  line-height: 1.6;
+  letter-spacing: .1em;
+}
+#skills .skill-overlay-heading h3 {
+  font-size: 25px !important;
+  line-height: 1.3;
+  margin-top: 4px;
+}
+#skills .skill-overlay-close {
+  min-height: 40px;
+  padding: 9px 14px;
+  font-size: 13px;
+}
+#skills .skill-overlay-tools {
+  flex: 1 1 auto;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px 22px;
+}
+#skills .skill-overlay-tools .skill-tools-label {
+  font-size: 11px !important;
+  line-height: 1.6;
+  letter-spacing: .09em;
+}
+#skills .skill-overlay-tools .skill-tool-chips { gap: 9px; }
+#skills .skill-overlay-tools .skill-tool-chips > span {
+  font-size: 13px !important;
+  line-height: 1.45;
+  padding: 9px 12px !important;
+  border-radius: 7px;
+}
+#skills .skill-overlay-hint { font-size: 12px !important; line-height: 1.6; }
+.credentials-grid { gap: 16px; }
+.credential-panel { padding: 25px !important; }
+.credential-panel h3 { font-size: 17px !important; line-height: 1.45; }
+.credential-year { font-size: 11px !important; line-height: 1.5; }
+.credential-entry strong, .cert-item strong { font-size: 14px !important; line-height: 1.65; }
+.credential-entry p, .cert-item p { font-size: 13px !important; line-height: 1.7; }
+.education-mark { font-size: 12px !important; }
+.cert-item .cert-symbol { font-size: 15px !important; }
+.verify-link { font-size: 12px !important; }
+.contact-inner p { font-size: 15px !important; line-height: 1.8; }
+.contact-location { font-size: 14px !important; line-height: 1.7; }
+.contact-social-link { font-size: 14px !important; line-height: 1.55; }
+.contact-social-link small { font-size: 12px !important; }
+.site-footer { font-size: 13px; line-height: 1.7; }
+.nav-hire { font-size: 13px !important; padding: 11px 15px; }
+
+@media (max-width: 1000px) {
+  .section-block { padding-top: 64px; }
+  .section-heading h2, .contact-inner h2 { font-size: clamp(32px, 4.2vw, 39px) !important; }
+  #skills .skill-grid:has(.skill-overlay:not([hidden])) { height: 282px !important; min-height: 282px !important; }
+  #skills .skill-overlay { padding: 22px; }
+  #skills .skill-overlay-heading h3 { font-size: 23px !important; }
+}
+@media (max-width: 650px) {
+  body { font-size: 15px; }
+  p { font-size: 14px; }
+  .section-block { padding-top: 56px !important; }
+  .section-heading { gap: 10px; margin-bottom: 22px; }
+  .section-heading h2, .contact-inner h2 { font-size: clamp(30px, 8vw, 36px) !important; line-height: 1.18 !important; }
+  .section-heading > p { font-size: 14px !important; line-height: 1.75 !important; }
+  .hero h1 { font-size: clamp(42px, 11vw, 56px); }
+  .hero-lead { font-size: 15px !important; line-height: 1.8 !important; }
+  .hero-meta .meta-number { font-size: 19px; }
+  .hero-meta .meta-label { font-size: 12px !important; }
+  .profile-info { padding: 22px !important; }
+  .profile-info h2 { font-size: 28px !important; }
+  .profile-facts strong { font-size: 14px !important; }
+  .tech-strip-head .tech-strip-label { font-size: 12px !important; }
+  .tech-strip-head > p { font-size: 13px !important; }
+  .technology-chip { font-size: 14px !important; min-height: 44px; }
+  .timeline-heading h3 { font-size: 20px !important; }
+  .timeline-date { font-size: 12px !important; }
+  .timeline-content ul { font-size: 14px !important; }
+  .stage-detail-copy h3 { font-size: 23px !important; }
+  .stage-detail-copy p { font-size: 14px !important; }
+  .project-card { padding: 21px 18px !important; }
+  .project-card > p, .featured-project > p { font-size: 14px !important; }
+  .filter-button { font-size: 13px !important; }
+  #skills .section-heading h2 { font-size: clamp(31px, 8vw, 37px) !important; }
+  #skills .skill-card-trigger { min-height: 82px !important; padding: 16px !important; }
+  #skills .skill-title { font-size: 16px !important; }
+  #skills .skill-tools { padding: 15px !important; }
+  #skills .skill-tools-label { font-size: 11px !important; }
+  #skills .skill-tool-chips > span { font-size: 13px !important; padding: 8px 10px !important; }
+  #skills .skill-overlay { display: none !important; }
+  .credential-panel { padding: 20px !important; }
+  .credential-panel h3 { font-size: 17px !important; }
+  .credential-entry strong, .cert-item strong { font-size: 14px !important; }
+  .credential-entry p, .cert-item p { font-size: 13px !important; }
+  .contact-social-link { font-size: 14px !important; }
+  .contact-social-link small { font-size: 12px !important; }
+}
+@media (max-width: 390px) {
+  .section-heading h2, .contact-inner h2 { font-size: 29px !important; }
+  #skills .skill-title { font-size: 15px !important; }
+  .profile-info { padding: 18px !important; }
+}
