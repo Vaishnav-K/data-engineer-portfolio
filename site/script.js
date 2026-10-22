@@ -308,7 +308,7 @@ filterButtons.forEach((button) => {
   });
 })(); 
 
-/* Scroll reveal + layered background parallax. Respect reduced-motion preferences. */
+/* Repeatable section reveals + a slower-moving layered backdrop. */
 (() => {
   const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
   if (motionPreference.matches) return;
@@ -321,12 +321,10 @@ filterButtons.forEach((button) => {
     document.documentElement.classList.add("has-scroll-motion");
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
+        // Toggle both ways so the reveal replays each time a section re-enters.
+        entry.target.classList.toggle("is-visible", entry.isIntersecting);
       });
-    }, { threshold: 0.06, rootMargin: "0px 0px -5% 0px" });
+    }, { threshold: 0.04, rootMargin: "0px 0px -7% 0px" });
 
     targets.forEach(target => {
       target.classList.add("scroll-reveal");
@@ -334,14 +332,16 @@ filterButtons.forEach((button) => {
     });
   }
 
-  // Move the fixed ambient backdrop more slowly than the page itself.
-  // One shared CSS variable avoids per-element layout work on every scroll.
+  // The page content moves at the normal scroll rate; the backdrop lags behind.
   let framePending = false;
   const updateParallax = () => {
     const offset = window.scrollY || window.pageYOffset || 0;
     const reduced = motionPreference.matches;
-    const shift = reduced ? 0 : -Math.min(offset * 0.055, 180);
-    document.documentElement.style.setProperty("--parallax-y", shift + "px");
+    const glowShift = reduced ? 0 : -Math.min(offset * 0.18, 1800);
+    const textureShift = reduced ? 0 : -Math.min(offset * 0.085, 850);
+    const root = document.documentElement;
+    root.style.setProperty("--parallax-y", glowShift + "px");
+    root.style.setProperty("--parallax-texture-y", textureShift + "px");
     framePending = false;
   };
 
@@ -356,7 +356,13 @@ filterButtons.forEach((button) => {
     if (event.matches) {
       document.documentElement.classList.remove("has-scroll-motion");
       document.documentElement.style.setProperty("--parallax-y", "0px");
-      targets.forEach(target => target.classList.remove("scroll-reveal"));
+      document.documentElement.style.setProperty("--parallax-texture-y", "0px");
+      targets.forEach(target => {
+        target.classList.remove("scroll-reveal", "is-visible");
+      });
+    } else {
+      // Reloading initializes the observer and background transforms cleanly.
+      window.location.reload();
     }
   });
 
