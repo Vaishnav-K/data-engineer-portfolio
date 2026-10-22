@@ -1228,3 +1228,77 @@ main, .site-footer { position: relative; z-index: 1; }
     transition:none!important;
   }
 }
+
+
+/* Calm interaction timing: consistent hover, dropdown and diagram motion. */
+:where(
+  a, button, [role="button"], .button, .project-card, .timeline-content,
+  .evidence-card, .technology-chip, .tech-strip-label, .stage-button,
+  .skill-card-trigger, .skill-overlay-close, .tech-map-close, .filter-button,
+  .nav-hire, .contact-social-link, .contact-icon-link, .tech-map-tag,
+  .tech-graph-node rect, .credential-panel, .cert-item, .education-mark,
+  .flow-arrow, .profile-card, .scale-highlight, .impact-badge
+) {
+  transition-duration: .52s !important;
+  transition-timing-function: cubic-bezier(.22,.61,.36,1) !important;
+}
+
+/* Draw panels in calmly instead of popping open. */
+@keyframes calmDropdownReveal {
+  0% { opacity: 0; transform: translate3d(0,12px,0) scale(.992); filter: blur(3px); }
+  100% { opacity: 1; transform: translate3d(0,0,0) scale(1); filter: blur(0); }
+}
+#skills .skill-overlay:not([hidden]),
+#skills .skill-tools:not([hidden]),
+.tech-explorer:not([hidden]) {
+  animation: calmDropdownReveal .62s cubic-bezier(.22,.61,.36,1) both;
+}
+#skills .skill-overlay:not([hidden]) { animation-duration: .68s; }
+#skills .skill-tools:not([hidden]) { animation-duration: .58s; }
+
+/* Make the cool background orbs breathe slowly while parallax follows scrolling. */
+@keyframes calmAmbientBreath {
+  0% { opacity: .68; }
+  50% { opacity: .91; }
+  100% { opacity: .76; }
+}
+body::before {
+  animation: calmAmbientBreath 24s ease-in-out infinite;
+}
+.has-scroll-motion .scroll-reveal {
+  transition:
+    opacity .9s ease,
+    filter .9s ease,
+    transform 1.05s cubic-bezier(.22,.61,.36,1) !important;
+}
+@media(max-width:650px) {
+  .has-scroll-motion .scroll-reveal {
+    transition:
+      opacity .72s ease,
+      filter .72s ease,
+      transform .78s cubic-bezier(.22,.61,.36,1) !important;
+  }
+  #skills .skill-overlay:not([hidden]),
+  #skills .skill-tools:not([hidden]),
+  .tech-explorer:not([hidden]) {
+    animation-duration: .56s;
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  :where(
+    a, button, [role="button"], .button, .project-card, .timeline-content,
+    .evidence-card, .technology-chip, .tech-strip-label, .stage-button,
+    .skill-card-trigger, .skill-overlay-close, .tech-map-close, .filter-button,
+    .nav-hire, .contact-social-link, .contact-icon-link, .tech-map-tag,
+    .tech-graph-node rect, .credential-panel, .cert-item, .education-mark,
+    .flow-arrow, .profile-card, .scale-highlight, .impact-badge
+  ) {
+    transition:none!important;
+  }
+  #skills .skill-overlay:not([hidden]),
+  #skills .skill-tools:not([hidden]),
+  .tech-explorer:not([hidden]),
+  body::before {
+    animation:none!important;
+  }
+}
