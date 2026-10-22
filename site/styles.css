@@ -1302,3 +1302,45 @@ body::before {
     animation:none!important;
   }
 }
+
+
+/* Skills section only: a slower, softer hover reveal and gently staggered tool chips. */
+@keyframes skillOverlayContentArrive {
+  from { opacity: 0; transform: translate3d(0,9px,0); filter: blur(2px); }
+  to   { opacity: 1; transform: translate3d(0,0,0); filter: blur(0); }
+}
+#skills .skill-overlay:not([hidden]) {
+  animation-duration: 1.08s !important;
+  animation-timing-function: cubic-bezier(.22,.61,.36,1) !important;
+}
+#skills .skill-overlay-tools .skill-tools-label {
+  animation: skillOverlayContentArrive .72s cubic-bezier(.22,.61,.36,1) .14s both;
+}
+#skills .skill-overlay-tools .skill-tool-chips > span {
+  animation: skillOverlayContentArrive .76s cubic-bezier(.22,.61,.36,1) both;
+}
+#skills .skill-overlay-tools .skill-tool-chips > span:nth-child(1) { animation-delay: .20s; }
+#skills .skill-overlay-tools .skill-tool-chips > span:nth-child(2) { animation-delay: .27s; }
+#skills .skill-overlay-tools .skill-tool-chips > span:nth-child(3) { animation-delay: .34s; }
+#skills .skill-overlay-tools .skill-tool-chips > span:nth-child(4) { animation-delay: .41s; }
+#skills .skill-overlay-tools .skill-tool-chips > span:nth-child(5) { animation-delay: .48s; }
+#skills .skill-overlay-tools .skill-tool-chips > span:nth-child(6) { animation-delay: .55s; }
+#skills .skill-overlay-tools .skill-tool-chips > span:nth-child(7) { animation-delay: .62s; }
+#skills .skill-overlay-tools .skill-tool-chips > span:nth-child(8) { animation-delay: .69s; }
+#skills .skill-overlay-tools .skill-tool-chips > span:nth-child(9) { animation-delay: .76s; }
+#skills .skill-overlay-tools .skill-tool-chips > span:nth-child(10) { animation-delay: .83s; }
+@media (max-width: 650px) {
+  #skills .skill-overlay:not([hidden]) { animation-duration: .85s !important; }
+  #skills .skill-overlay-tools .skill-tools-label,
+  #skills .skill-overlay-tools .skill-tool-chips > span {
+    animation-delay: 0s !important;
+    animation-duration: .62s !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #skills .skill-overlay:not([hidden]),
+  #skills .skill-overlay-tools .skill-tools-label,
+  #skills .skill-overlay-tools .skill-tool-chips > span {
+    animation: none !important;
+  }
+}
