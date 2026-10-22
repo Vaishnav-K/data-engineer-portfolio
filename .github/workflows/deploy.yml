@@ -58,7 +58,7 @@ jobs:
           metrics["total_bytes"] = metrics["customers"]["bytes"] + metrics["transactions"]["bytes"]
           output = Path("site/data/pipeline-metrics.json")
           output.parent.mkdir(parents=True, exist_ok=True)
-          output.write_text(json.dumps(metrics, indent=2) + "\\n", encoding="utf-8")
+          output.write_text(json.dumps(metrics, indent=2), encoding="utf-8")
           print(json.dumps(metrics, indent=2))
           PY
 
