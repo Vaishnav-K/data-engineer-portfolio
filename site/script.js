@@ -457,7 +457,7 @@ filterButtons.forEach((button) => {
       if (!canHover() || event.pointerType === "touch" || pinned) return;
       clearHoverTimer();
       // A brief delay keeps quick clicks on the category button working naturally.
-      hoverTimer = window.setTimeout(() => showOverlay(card, false), 320);
+      hoverTimer = window.setTimeout(() => showOverlay(card, false), 460);
     });
   });
 
