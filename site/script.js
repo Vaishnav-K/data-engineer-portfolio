@@ -255,7 +255,7 @@ filterButtons.forEach((button) => {
       order.forEach(button => {
         const delta = before.get(button) - button.getBoundingClientRect().left;
         if (Math.abs(delta) > 1 && typeof button.animate === "function") {
-          button.animate([{transform:"translateX("+delta+"px)"},{transform:"translateX(0)"}],{duration:360,easing:"cubic-bezier(.2,.8,.2,1)"});
+          button.animate([{transform:"translateX("+delta+"px)"},{transform:"translateX(0)"}],{duration:620,easing:"cubic-bezier(.22,.61,.36,1)"});
         }
       });
     }
@@ -457,7 +457,7 @@ filterButtons.forEach((button) => {
       if (!canHover() || event.pointerType === "touch" || pinned) return;
       clearHoverTimer();
       // A brief delay keeps quick clicks on the category button working naturally.
-      hoverTimer = window.setTimeout(() => showOverlay(card, false), 240);
+      hoverTimer = window.setTimeout(() => showOverlay(card, false), 320);
     });
   });
 
