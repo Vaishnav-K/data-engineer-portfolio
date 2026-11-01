@@ -2602,3 +2602,92 @@ body::before {
     line-height: 1.4;
   }
 }
+
+
+/* Full-viewport evidence image viewer — 2026-11-02 */
+.screenshot-lightbox,
+.image-lightbox,
+.lightbox-overlay,
+.evidence-lightbox,
+.screenshot-modal,
+.image-modal,
+.modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10000 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  max-width: none !important;
+  max-height: none !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 14px !important;
+  padding: 44px 24px 52px !important;
+  overflow: auto !important;
+  background: rgba(3,7,15,.97) !important;
+  backdrop-filter: blur(12px);
+}
+.screenshot-lightbox img,
+.image-lightbox img,
+.lightbox-overlay img,
+.evidence-lightbox img,
+.screenshot-modal img,
+.image-modal img,
+.modal-overlay img {
+  display: block !important;
+  width: min(96vw, 1680px) !important;
+  height: auto !important;
+  max-width: 96vw !important;
+  max-height: calc(100dvh - 140px) !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  margin: auto !important;
+  border-radius: 8px !important;
+  box-shadow: 0 18px 64px rgba(0,0,0,.55) !important;
+  image-rendering: auto !important;
+}
+.screenshot-lightbox button, .screenshot-lightbox .lightbox-close, .screenshot-lightbox .modal-close,
+.image-lightbox button, .image-lightbox .lightbox-close, .image-lightbox .modal-close,
+.lightbox-overlay button, .lightbox-overlay .lightbox-close, .lightbox-overlay .modal-close,
+.evidence-lightbox button, .evidence-lightbox .lightbox-close, .evidence-lightbox .modal-close,
+.screenshot-modal button, .screenshot-modal .lightbox-close, .screenshot-modal .modal-close,
+.image-modal button, .image-modal .lightbox-close, .image-modal .modal-close,
+.modal-overlay button, .modal-overlay .lightbox-close, .modal-overlay .modal-close {
+  flex: 0 0 auto;
+}
+@media(max-width:650px) {
+  .screenshot-lightbox,
+.image-lightbox,
+.lightbox-overlay,
+.evidence-lightbox,
+.screenshot-modal,
+.image-modal,
+.modal-overlay {
+    padding: 48px 10px 42px !important;
+  }
+  .screenshot-lightbox img,
+.image-lightbox img,
+.lightbox-overlay img,
+.evidence-lightbox img,
+.screenshot-modal img,
+.image-modal img,
+.modal-overlay img {
+    width: 98vw !important;
+    max-width: 98vw !important;
+    max-height: calc(100dvh - 118px) !important;
+    border-radius: 5px !important;
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  .screenshot-lightbox,
+.image-lightbox,
+.lightbox-overlay,
+.evidence-lightbox,
+.screenshot-modal,
+.image-modal,
+.modal-overlay { backdrop-filter: none; }
+}
