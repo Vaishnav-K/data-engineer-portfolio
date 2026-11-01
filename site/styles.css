@@ -2602,3 +2602,18 @@ body::before {
     line-height: 1.4;
   }
 }
+
+
+/* Evidence cards use content height rather than stretching to the tallest grid item. */
+.evidence-grid > .evidence-card {
+  height: auto !important;
+  min-height: 0 !important;
+  align-self: start !important;
+}
+.evidence-grid > .evidence-card > p {
+  flex: 0 0 auto !important;
+}
+.evidence-grid > .evidence-card > a:last-child {
+  margin-top: 0 !important;
+  align-self: flex-start !important;
+}
