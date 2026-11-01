@@ -2246,3 +2246,265 @@ body::before {
     align-items: flex-start;
   }
 }
+
+
+/* Navigation, evidence disclosure and balanced gallery refinement — 2026-11-02 */
+
+/* Keep the section navigation intentionally anchored to the upper-right. */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+#mainNav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(14px, 2vw, 25px);
+  margin-left: auto;
+}
+#mainNav > a:not(.nav-hire):not(.nav-cta) {
+  position: relative;
+  padding: 9px 0;
+  color: #bdc9df;
+  white-space: nowrap;
+  transition: color .2s ease;
+}
+#mainNav > a:not(.nav-hire):not(.nav-cta)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg,#b9adff,#72d9ef);
+  transition: right .22s ease;
+}
+#mainNav > a:not(.nav-hire):not(.nav-cta):hover,
+#mainNav > a:not(.nav-hire):not(.nav-cta):focus-visible {
+  color: #e9faff;
+}
+#mainNav > a:not(.nav-hire):not(.nav-cta):hover::after,
+#mainNav > a:not(.nav-hire):not(.nav-cta):focus-visible::after {
+  right: 0;
+}
+#mainNav > a:focus-visible,
+.project-evidence > summary:focus-visible {
+  outline: 2px solid #6bdcf2;
+  outline-offset: 4px;
+  border-radius: 5px;
+}
+
+/* Make the evidence disclosure feel like a real control, not an ordinary text row. */
+.project-evidence > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 62px;
+  padding: 12px 16px;
+  border: 1px solid rgba(107,220,242,.32);
+  border-radius: 11px;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(107,220,242,.10),transparent 55%),
+    linear-gradient(105deg,rgba(181,168,255,.095),rgba(107,220,242,.055));
+  color: #c9f2ff;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.project-evidence > summary:hover {
+  border-color: rgba(107,220,242,.72);
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(107,220,242,.15),transparent 55%),
+    linear-gradient(105deg,rgba(181,168,255,.13),rgba(107,220,242,.09));
+  box-shadow: 0 8px 24px rgba(0,0,0,.18), 0 0 22px rgba(107,220,242,.06);
+  transform: translateY(-1px);
+}
+.project-evidence > summary::-webkit-details-marker { display: none; }
+.project-evidence > summary::after {
+  content: none !important;
+  display: none !important;
+}
+.evidence-summary-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+.evidence-summary-copy strong {
+  color: #d8f6ff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .005em;
+}
+.evidence-summary-copy small {
+  color: #8fa9c6;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.evidence-summary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  padding: 7px 9px 7px 12px;
+  border: 1px solid rgba(107,220,242,.3);
+  border-radius: 7px;
+  background: rgba(5,13,26,.42);
+  color: #85e4f5;
+  font: 800 9px/1.3 'DM Mono',monospace;
+  letter-spacing: .08em;
+  white-space: nowrap;
+}
+.evidence-summary-action b {
+  display: grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 5px;
+  background: linear-gradient(130deg,#b5a8ff,#72d8ee);
+  color: #0b1120;
+  font: 800 16px/1 Manrope, sans-serif;
+  transition: transform .2s ease;
+}
+.project-evidence[open] > summary {
+  border-color: rgba(107,220,242,.5);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+.project-evidence[open] .evidence-summary-action b {
+  transform: rotate(45deg);
+}
+.project-evidence > summary:active { transform: translateY(0); }
+
+/* Two independent, deliberately even evidence groups (6 cards + 4 cards). */
+.evidence-section-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 7px 16px;
+  margin: 21px 0 11px;
+  padding: 0 1px 9px;
+  border-bottom: 1px solid rgba(142,164,201,.18);
+}
+.evidence-section-label > span {
+  color: #6bdcf2;
+  font: 700 9px/1.5 'DM Mono',monospace;
+  letter-spacing: .14em;
+}
+.evidence-section-label > h4 {
+  margin: 0;
+  color: #aabbd3;
+  font-size: 12px;
+  font-weight: 700;
+}
+.evidence-section-label-secondary { margin-top: 28px; }
+.evidence-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  align-items: stretch;
+  gap: 14px;
+}
+.evidence-grid > .evidence-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+.evidence-grid > .evidence-card > p { flex: 1 0 auto; }
+.evidence-grid > .evidence-card > a:last-child { margin-top: auto; align-self: flex-start; }
+.evidence-grid .evidence-screenshot-trigger {
+  flex: 0 0 auto;
+}
+.evidence-grid .evidence-screenshot {
+  aspect-ratio: 16 / 9;
+}
+.evidence-screenshot-trigger {
+  min-width: 0;
+}
+.evidence-card-screenshot .evidence-screenshot-trigger {
+  width: 100%;
+}
+.evidence-card-screenshot .evidence-image-hint {
+  font-size: 8px;
+}
+.evidence-footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(142,164,201,.15);
+}
+
+/* Mobile: preserve the hamburger menu and stack cards without producing gaps. */
+@media(max-width:1000px) and (min-width:651px) {
+  #mainNav { gap: 13px; font-size: 11px; }
+  .site-header { gap: 14px; }
+}
+@media(max-width:650px) {
+  .site-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  #mainNav {
+    display: none;
+    position: absolute;
+    top: 67px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-left: 0;
+    padding: 18px 20px 20px;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    border-bottom: 1px solid rgba(107,220,242,.25);
+    background: rgba(9,15,29,.98);
+    box-shadow: 0 18px 34px rgba(0,0,0,.34);
+  }
+  #mainNav.open { display: flex; }
+  #mainNav > a:not(.nav-hire):not(.nav-cta) {
+    padding: 9px 2px;
+    border-bottom: 1px solid rgba(142,164,201,.1);
+  }
+  #mainNav > a:not(.nav-hire):not(.nav-cta)::after { display: none; }
+  .project-evidence > summary {
+    min-height: 60px;
+    padding: 11px 12px;
+    gap: 8px;
+  }
+  .evidence-summary-copy strong { font-size: 12px; }
+  .evidence-summary-copy small { font-size: 9px; }
+  .evidence-summary-action {
+    gap: 6px;
+    padding: 6px;
+    font-size: 8px;
+    letter-spacing: .04em;
+  }
+  .evidence-summary-action b { width: 19px; height: 19px; }
+  .evidence-section-label {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 19px;
+  }
+  .evidence-grid { grid-template-columns: minmax(0,1fr) !important; gap: 12px; }
+  .evidence-grid > .evidence-card { height: auto; }
+  .evidence-footer { align-items: flex-start; flex-direction: column; }
+}
+@media(prefers-reduced-motion:reduce) {
+  #mainNav > a:not(.nav-hire):not(.nav-cta)::after,
+  .project-evidence > summary,
+  .evidence-summary-action b { transition: none !important; }
+}
