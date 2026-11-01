@@ -191,36 +191,12 @@
             </span>
             <span class="evidence-summary-action"><span class="evidence-summary-label">OPEN GALLERY</span><b aria-hidden="true">+</b></span>
           </summary><div class="evidence-gallery">
-            <p class="evidence-intro">Real Airflow and AWS console captures are shown alongside a documented synthetic-data quality and reconciliation summary. Screenshots are from a local development run; they are evidence of the captured run, not a production deployment.</p>
+            <p class="evidence-intro">Explore the recorded local orchestration run, task logs, validation checks and synthetic-data quality results. The evidence distinguishes measured local runs from production claims.</p>
             <div class="evidence-section-label">
               <span>01 / PLATFORM EVIDENCE</span>
               <h4>Orchestration, containers and cloud storage</h4>
             </div>
             <div class="evidence-grid">
-              <article class="evidence-card evidence-card-screenshot">
-                <button class="evidence-screenshot-trigger" type="button" data-screenshot-src="assets/airflow-dag-success.webp" data-screenshot-alt="Apache Airflow manual DAG run marked Success, with preflight, pipeline execution, and evidence-validation tasks all successful." data-screenshot-caption="Apache Airflow — successful local validation run overview" aria-label="Enlarge Airflow successful validation overview">
-                  <img class="evidence-screenshot" src="assets/airflow-dag-success.webp" alt="Apache Airflow manual DAG run marked Success, with preflight, pipeline execution, and evidence-validation tasks all successful." loading="lazy" decoding="async">
-                  <span class="evidence-image-hint">VIEW FULL SIZE ⤢</span>
-                </button>
-                <h4>Airflow — DAG execution overview</h4>
-                <p>Successful manual run of the isolated local three-task validation workflow. This is local development evidence, not a production deployment.</p>
-              </article>
-              <article class="evidence-card evidence-card-screenshot">
-                <button class="evidence-screenshot-trigger" type="button" data-screenshot-src="assets/aws-s3-raw-objects.webp" data-screenshot-alt="Amazon S3 console listing customers.csv, transactions_incremental.csv, and transactions.csv in the banking-data raw folder." data-screenshot-caption="Amazon S3 — synthetic raw data objects" aria-label="Enlarge Amazon S3 raw objects screenshot">
-                  <img class="evidence-screenshot" src="assets/aws-s3-raw-objects.webp" alt="Amazon S3 console listing customers.csv, transactions_incremental.csv, and transactions.csv in the banking-data raw folder." loading="lazy" decoding="async">
-                  <span class="evidence-image-hint">VIEW FULL SIZE ⤢</span>
-                </button>
-                <h4>Amazon S3 — raw data storage</h4>
-                <p>Real AWS Console capture showing the three synthetic CSV source files under <code>banking-data/raw/</code>. Account and bucket identifiers have been obscured.</p>
-              </article>
-              <article class="evidence-card evidence-card-screenshot">
-                <button class="evidence-screenshot-trigger" type="button" data-screenshot-src="assets/docker-desktop-airflow-evidence.jpg" data-screenshot-alt="Docker Desktop showing the banking-platform-airflow-validation local Docker Compose project with PostgreSQL, Redis, and Apache Airflow services and container logs." data-screenshot-caption="Docker Desktop — local Airflow development environment" aria-label="Enlarge Docker Desktop local Airflow environment screenshot">
-                  <img class="evidence-screenshot" src="assets/docker-desktop-airflow-evidence.jpg" alt="Docker Desktop showing the local banking-platform-airflow-validation Docker Compose project, its PostgreSQL, Redis and Airflow containers, and service logs." loading="lazy" decoding="async">
-                  <span class="evidence-image-hint">VIEW FULL SIZE ⤢</span>
-                </button>
-                <h4>Docker Desktop — local Airflow stack</h4>
-                <p>Real Docker Desktop capture of the local Docker Compose environment, including PostgreSQL, Redis and Airflow services. This demonstrates the development orchestration stack, not a production deployment.</p>
-              </article>
               <article class="evidence-card evidence-card-log">
                 <div class="airflow-log-window" aria-label="Transcribed excerpt from the supplied Airflow run_banking_pipeline task log">
                   <div class="airflow-log-titlebar"><span><i></i> run_banking_pipeline</span><strong>SUCCESS</strong></div>
@@ -270,6 +246,16 @@
                 <a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/src/validate_pipeline_evidence.py" target="_blank" rel="noreferrer">Open evidence-validation source ↗</a>
               </article>
               <article class="evidence-card"><div class="evidence-visual evidence-airflow-visual"><span class="evidence-node">Airflow DAG</span><i>↓</i><span class="evidence-node">Run + validate</span><i>↓</i><span class="evidence-pass">PASS</span></div><h4>Orchestration & run evidence</h4><p>Docker-based Airflow DAG runs preflight checks, executes the pipeline and validates generated evidence. S3 upload is opt-in.</p><a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/orchestration/airflow/dags/banking_data_platform_pipeline.py" target="_blank" rel="noreferrer">Open DAG source ↗</a></article>
+              <article class="evidence-card">
+                <div class="evidence-visual evidence-flow-visual">
+                  <span class="evidence-node">Docker Compose</span><i>→</i>
+                  <span class="evidence-node">Airflow services</span><i>→</i>
+                  <span class="evidence-node">PostgreSQL · Redis</span>
+                </div>
+                <h4>Container runtime</h4>
+                <p>Local Docker Compose environment runs the Airflow services with PostgreSQL and Redis. This documents the reproducible development orchestration stack.</p>
+                <a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/orchestration/airflow/docker-compose.yaml" target="_blank" rel="noreferrer">Open Docker Compose configuration ↗</a>
+              </article>
             </div>
             <div class="evidence-section-label evidence-section-label-secondary">
               <span>02 / DATA PROCESSING EVIDENCE</span>
@@ -437,16 +423,7 @@
     </div></div></section>
   </main>
   <footer class="site-footer section-wrap"><a class="brand" href="#home"><span class="brand-mark">V.</span><span class="brand-name">VAISHNAV<span class="brand-divider">|</span><span class="brand-role">DATA ENGINEERING</span></span></a><span>Senior Data Engineer · Chennai, India</span><a href="#home">Back to top ↑</a></footer>
-  <dialog class="evidence-lightbox" id="evidenceLightbox" aria-label="Project screenshot viewer">
-    <div class="evidence-lightbox-panel">
-      <button class="evidence-lightbox-close" id="evidenceLightboxClose" type="button" aria-label="Close screenshot viewer">×</button>
-      <figure class="evidence-lightbox-figure">
-        <img id="evidenceLightboxImage" src="" alt="">
-        <figcaption id="evidenceLightboxCaption"></figcaption>
-      </figure>
-      <p class="evidence-lightbox-hint">Click the image or outside it, or press Esc to close</p>
-    </div>
-  </dialog>
+g>
   <script src="script.js?v=20261102-hero-lightbox"></script>
 </body>
 </html>
