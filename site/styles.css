@@ -1776,3 +1776,225 @@ body::before {
 @media(max-width:650px) {
   .hero .hero-name { font-size: clamp(42px, 10.5vw, 56px); }
 }
+
+
+/* Final requested visual pass — 2026-11-02 */
+
+/* Make the name unmistakably the hero: uppercase, larger, and subtly glitching. */
+.hero .hero-name-glitch {
+  position: relative;
+  display: inline-block;
+  margin: 0 0 12px;
+  isolation: isolate;
+  overflow: visible;
+  font-family: Manrope, system-ui, sans-serif;
+  font-size: clamp(66px, 6.5vw, 82px);
+  font-weight: 850;
+  line-height: .98;
+  letter-spacing: -.065em;
+  text-transform: uppercase;
+  color: #a9e8f7;
+  background: linear-gradient(100deg, #b8aaff 0%, #9bdcf4 56%, #71d9ef 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+}
+.hero .hero-name-glitch::before,
+.hero .hero-name-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  -webkit-text-fill-color: initial;
+  background: none;
+  color: #77eaff;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  white-space: nowrap;
+}
+.hero .hero-name-glitch::before {
+  color: #70e4f5;
+  text-shadow: 2px 0 rgba(112,228,245,.42);
+  animation: vaishnavGlitchCyan 8.4s infinite steps(1,end);
+}
+.hero .hero-name-glitch::after {
+  color: #b9aaff;
+  text-shadow: -2px 0 rgba(185,170,255,.38);
+  animation: vaishnavGlitchViolet 10.2s infinite steps(1,end);
+}
+
+/* Keep the tagline deliberately neutral so it does not compete with the name. */
+.hero .hero-tagline {
+  margin: 0 0 19px;
+  color: #edf2fc;
+  font-size: clamp(33px, 3.6vw, 43px);
+  font-weight: 780;
+  line-height: 1.13;
+  letter-spacing: -.05em;
+}
+.hero .hero-tagline,
+.hero .hero-tagline * {
+  background: none !important;
+  color: #edf2fc !important;
+  -webkit-text-fill-color: #edf2fc !important;
+  text-shadow: none !important;
+}
+
+/* Gradient/fade accent for section and project headings; body copy stays neutral. */
+.section-heading h2,
+.contact-inner h2,
+.tech-explorer-heading h2 {
+  display: inline-block;
+  color: transparent !important;
+  background: linear-gradient(100deg, #b9adff 0%, #9bdcf4 56%, #72d9ef 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none;
+  font-size: clamp(36px, 3.6vw, 46px);
+  line-height: 1.18;
+  letter-spacing: -.045em;
+}
+.timeline-heading h3,
+.project-card h3,
+.stage-detail-copy h3,
+.scale-panel-heading h3,
+.tech-map-insight h3,
+.profile-info h2,
+.credential-panel h3,
+.evidence-card h4 {
+  display: inline-block;
+  color: transparent !important;
+  background: linear-gradient(100deg, #b9adff 0%, #9bdcf4 56%, #72d9ef 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent !important;
+  text-shadow: none;
+}
+
+/* Improve reading size and contrast in the content beneath each heading. */
+.section-heading > p,
+.timeline-content ul,
+.project-card > p,
+.stage-detail-copy p,
+.tech-map-insight p,
+.credential-item strong,
+.cert-item strong,
+.evidence-card p {
+  color: #aebbd1;
+}
+.section-heading > p {
+  font-size: 15px !important;
+  line-height: 1.85;
+  max-width: 470px;
+}
+.timeline-content ul {
+  font-size: 16px !important;
+  line-height: 1.9 !important;
+}
+.timeline-heading .company {
+  font-size: 14px !important;
+  line-height: 1.65;
+}
+.timeline-date {
+  font-size: 12px !important;
+}
+.project-card > p,
+.featured-project > p {
+  font-size: 15px !important;
+  line-height: 1.85;
+}
+.project-note {
+  font-size: 13px !important;
+  line-height: 1.75;
+}
+.stage-detail-copy p,
+.tech-map-insight p {
+  font-size: 15px !important;
+  line-height: 1.85;
+}
+.stage-facts strong,
+.profile-facts strong {
+  font-size: 13px !important;
+  line-height: 1.65;
+}
+.credential-item strong,
+.cert-item strong {
+  font-size: 13px !important;
+  line-height: 1.7;
+}
+.credential-item p,
+.cert-item p {
+  font-size: 12px !important;
+  line-height: 1.7;
+}
+.skill-card .skill-title {
+  font-size: 17px !important;
+}
+.evidence-card h4 {
+  font-size: 15px !important;
+  line-height: 1.5;
+}
+.evidence-card p {
+  font-size: 13px !important;
+  line-height: 1.8;
+}
+.source-note,
+.architecture-footnote {
+  font-size: 12px !important;
+  line-height: 1.75;
+}
+
+/* The color hierarchy remains clear on phones without crowding the hero. */
+@media (max-width: 1000px) {
+  .hero .hero-name-glitch {
+    font-size: clamp(58px, 8vw, 76px);
+  }
+  .section-heading h2,
+  .contact-inner h2,
+  .tech-explorer-heading h2 {
+    font-size: clamp(35px, 5vw, 43px);
+  }
+}
+@media (max-width: 650px) {
+  .hero .hero-name-glitch {
+    font-size: clamp(48px, 12vw, 62px);
+    letter-spacing: -.06em;
+    margin-bottom: 11px;
+  }
+  .hero .hero-tagline {
+    font-size: clamp(30px, 7.8vw, 37px);
+    margin-bottom: 16px;
+  }
+  .section-heading h2,
+  .contact-inner h2,
+  .tech-explorer-heading h2 {
+    font-size: clamp(32px, 8.2vw, 38px) !important;
+  }
+  .section-heading > p {
+    font-size: 14px !important;
+  }
+  .timeline-content ul {
+    font-size: 15px !important;
+    line-height: 1.8 !important;
+  }
+  .project-card > p,
+  .featured-project > p {
+    font-size: 14px !important;
+    line-height: 1.8;
+  }
+  .stage-detail-copy p,
+  .tech-map-insight p {
+    font-size: 14px !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero .hero-name-glitch::before,
+  .hero .hero-name-glitch::after {
+    animation: none !important;
+    display: none !important;
+  }
+}
