@@ -501,3 +501,56 @@ filterButtons.forEach((button) => {
 
   hideOverlay();
 })();
+
+
+/* In-page screenshot lightbox — 2026-11-02 */
+(() => {
+  const dialog = document.querySelector("#evidenceLightbox");
+  const image = document.querySelector("#evidenceLightboxImage");
+  const caption = document.querySelector("#evidenceLightboxCaption");
+  const closeButton = document.querySelector("#evidenceLightboxClose");
+  const triggers = Array.from(document.querySelectorAll(".evidence-screenshot-trigger"));
+
+  if (!dialog || !image || !caption || !closeButton || !triggers.length) return;
+  if (typeof dialog.showModal !== "function") {
+    // Preserve keyboard and browser fallback behaviour if native dialogs are unavailable.
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        window.open(trigger.dataset.screenshotSrc, "_blank", "noopener,noreferrer");
+      });
+    });
+    return;
+  }
+
+  let activeTrigger = null;
+
+  const closeViewer = () => {
+    if (dialog.open) dialog.close();
+  };
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      const source = trigger.dataset.screenshotSrc;
+      if (!source) return;
+
+      activeTrigger = trigger;
+      image.src = source;
+      image.alt = trigger.dataset.screenshotAlt || "Project evidence screenshot";
+      caption.textContent = trigger.dataset.screenshotCaption || "Project evidence";
+
+      if (!dialog.open) dialog.showModal();
+    });
+  });
+
+  closeButton.addEventListener("click", closeViewer);
+  image.addEventListener("click", closeViewer);
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) closeViewer();
+  });
+
+  dialog.addEventListener("close", () => {
+    image.removeAttribute("src");
+    if (activeTrigger?.isConnected) activeTrigger.focus();
+    activeTrigger = null;
+  });
+})();
