@@ -1744,3 +1744,35 @@ body::before {
 @media(prefers-reduced-motion:reduce) {
   .evidence-screenshot-trigger .evidence-screenshot { transition: none; }
 }
+
+
+/* Final specificity pass: ensure new hero and heading colors win over earlier theme rules. */
+.hero .hero-name {
+  font-size: clamp(48px, 5.6vw, 68px);
+}
+.section-heading h2,
+.contact-inner h2,
+.tech-explorer-heading h2,
+.tech-map-insight h3,
+.profile-info h2,
+.timeline-heading h3,
+.stage-detail-copy h3,
+.scale-panel-heading h3,
+.project-card h3,
+.credential-panel h3,
+.skill-card .skill-title,
+.evidence-card h4 {
+  color: #93def2;
+  text-shadow: 0 0 18px rgba(107,220,242,.09);
+}
+.section-heading h2,
+.contact-inner h2,
+.tech-explorer-heading h2 {
+  color: #a5e5f5;
+}
+@media(max-width:1000px) {
+  .hero .hero-name { font-size: clamp(46px, 7vw, 64px); }
+}
+@media(max-width:650px) {
+  .hero .hero-name { font-size: clamp(42px, 10.5vw, 56px); }
+}
