@@ -228,6 +228,7 @@
                 <h4>Airflow — evidence validation logs</h4>
                 <p>The final task reports <strong>PASS</strong>: 10 passed stages, 0 failed stages and 1 skipped stage. S3 upload was not requested in this particular run.</p>
               </article>
+              <div class="evidence-section-label evidence-section-label-inline"><span>02 / DATA PROCESSING EVIDENCE</span><h4>Quality, reconciliation and engineering design</h4></div>
               <article class="evidence-card evidence-quality-report-card">
                 <div class="evidence-quality-report-visual">
                   <div class="quality-report-topline"><span>BASELINE VALIDATION / SYNTHETIC DATA</span><strong>PASS</strong></div>
@@ -242,7 +243,9 @@
                 </div>
                 <h4>Data quality & row reconciliation</h4>
                 <p>Documented baseline result: deduplicated rows balance exactly to valid plus quarantined records. Three rejected rows retain explicit reasons.</p>
-                <a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/docs/data-quality.md" target="_blank" rel="noreferrer">Read validation rules and report figures ↗</a>
+                <p class="quality-cross-engine-note">A separate DuckDB/PySpark comparison checks valid counts, quarantine counts and reasons, transaction IDs, and analytics totals.</p>
+                <a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/docs/data-quality.md" target="_blank" rel="noreferrer">Read data quality and row reconciliation ↗</a>
+                <a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/src/compare_engines.py" target="_blank" rel="noreferrer">Inspect DuckDB / Spark reconciliation checks ↗</a>
               </article>
               <article class="evidence-card"><div class="evidence-visual evidence-flow-visual"><span class="evidence-node">CSV sources</span><i>→</i><span class="evidence-node">ETL + quality</span><i>→</i><span class="evidence-node">Reports</span></div><h4>Pipeline architecture</h4><p>Batch and incremental processing, validation, anomaly screening, reconciliation and operational reports.</p><a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/docs/architecture.md" target="_blank" rel="noreferrer">Read architecture notes ↗</a></article>
               <article class="evidence-card"><div class="evidence-visual evidence-s3-visual"><span class="s3-mark">S3</span><div><strong>banking-data / raw</strong><small>customers.csv</small><small>transactions.csv</small><small>transactions_incremental.csv</small></div><span class="evidence-status">CHECKSUM<br>VERIFIED</span></div><h4>Amazon S3 ingestion</h4><p>Checksum-aware upload and verification for generated raw CSV files, with audit reporting.</p><a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/src/s3_ingestion.py" target="_blank" rel="noreferrer">Inspect ingestion code ↗</a></article>
