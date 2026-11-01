@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b1020">
   <meta name="description" content="Vaishnav K — Senior Data Engineer with 5 years of experience in Spark, Databricks, banking data platforms, AWS, and pipeline reliability.">
   <title>Vaishnav K | Senior Data Engineer</title>
-  <link rel="stylesheet" href="styles.css?v=20261102-airflow-logs-quality-report">
+  <link rel="stylesheet" href="styles.css?v=20261102-airflow-logs-transcribed">
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
@@ -212,21 +212,53 @@
                 <h4>Amazon S3 — raw data storage</h4>
                 <p>Real AWS Console capture showing the three synthetic CSV source files under <code>banking-data/raw/</code>. Account and bucket identifiers have been obscured.</p>
               </article>
-              <article class="evidence-card evidence-card-screenshot">
-                <button class="evidence-screenshot-trigger evidence-screenshot-trigger-log" type="button" data-screenshot-src="assets/airflow-run-banking-pipeline-logs.webp" data-screenshot-alt="Apache Airflow run_banking_pipeline task marked Success, showing the synthetic banking pipeline stages in the task logs." data-screenshot-caption="Airflow task logs — run_banking_pipeline (1 November 2026)" aria-label="Enlarge Airflow run banking pipeline task logs">
-                  <img class="evidence-screenshot" src="assets/airflow-run-banking-pipeline-logs.webp" alt="Apache Airflow run_banking_pipeline task marked Success, showing the synthetic banking pipeline stages in the task logs." loading="lazy" decoding="async">
-                  <span class="evidence-image-hint">VIEW FULL SIZE ⤢</span>
-                </button>
+              <article class="evidence-card evidence-card-log">
+                <div class="airflow-log-window" aria-label="Transcribed excerpt from the supplied Airflow run_banking_pipeline task log">
+                  <div class="airflow-log-titlebar"><span><i></i> run_banking_pipeline</span><strong>SUCCESS</strong></div>
+                  <div class="airflow-log-meta"><span>2026-11-01 23:01:52 → 23:03:21</span><span>PythonOperator</span></div>
+                  <pre class="airflow-log-content"><span class="log-muted">[23:01:53]</span> <b class="log-info">INFO</b> Launching banking pipeline (S3 upload requested: False).
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> ================================================
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> AI-ENHANCED BANKING DATA PLATFORM
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> PIPELINE OBSERVABILITY ENABLED
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> >>> Schema Validation
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> >>> Main ETL
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> >>> Incremental ETL
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> >>> Quality Report
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> >>> Anomaly Detection
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> >>> Analytics Exports
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> >>> Automated Tests
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> >>> Spark Processing
+<span class="log-muted">[23:03:21]</span> <b class="log-info">INFO</b> >>> Cross-Engine Reconciliation</pre>
+                </div>
                 <h4>Airflow — pipeline execution logs</h4>
-                <p>Task-level logs show the pipeline launching and reporting its processing stages. The captured run had S3 upload disabled; S3 storage is evidenced separately.</p>
+                <p>Transcribed excerpt from the supplied Airflow capture. The task launched the pipeline and logged the validation, ETL, quality, analytics, test, Spark and reconciliation stages. S3 upload was disabled for this run.</p>
+                <a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/orchestration/airflow/dags/banking_data_platform_pipeline.py" target="_blank" rel="noreferrer">Open Airflow DAG source ↗</a>
               </article>
-              <article class="evidence-card evidence-card-screenshot">
-                <button class="evidence-screenshot-trigger evidence-screenshot-trigger-log" type="button" data-screenshot-src="assets/airflow-validate-pipeline-evidence-logs.webp" data-screenshot-alt="Apache Airflow validate_pipeline_evidence task marked Success, reporting PASS, 10 passed stages, zero failed stages, and one skipped stage." data-screenshot-caption="Airflow task logs — validate_pipeline_evidence (1 November 2026)" aria-label="Enlarge Airflow evidence validation task logs">
-                  <img class="evidence-screenshot" src="assets/airflow-validate-pipeline-evidence-logs.webp" alt="Apache Airflow validate_pipeline_evidence task marked Success, reporting PASS, 10 passed stages, zero failed stages, and one skipped stage." loading="lazy" decoding="async">
-                  <span class="evidence-image-hint">VIEW FULL SIZE ⤢</span>
-                </button>
+              <article class="evidence-card evidence-card-log">
+                <div class="airflow-log-window" aria-label="Transcribed excerpt from the supplied Airflow validate_pipeline_evidence task log">
+                  <div class="airflow-log-titlebar"><span><i></i> validate_pipeline_evidence</span><strong>SUCCESS</strong></div>
+                  <div class="airflow-log-meta"><span>2026-11-01 23:03:21 → 23:03:22</span><span>PythonOperator</span></div>
+                  <pre class="airflow-log-content"><span class="log-muted">[23:03:22]</span> <b class="log-info">INFO</b> Banking pipeline evidence validation passed:
+{
+  <span class="log-key">"status"</span>: <b class="log-pass">"PASS"</b>,
+  <span class="log-key">"run_id"</span>: "a906970e-01d4-42ef-9a9c-635b2f19f80a",
+  <span class="log-key">"stage_count"</span>: 11,
+  <span class="log-key">"passed_stages"</span>: <b class="log-pass">10</b>,
+  <span class="log-key">"failed_stages"</span>: <b class="log-zero">0</b>,
+  <span class="log-key">"skipped_stages"</span>: 1,
+  <span class="log-key">"s3_upload_requested"</span>: false
+}
+<span class="log-muted">[23:03:22]</span> <b class="log-info">INFO</b> validated_artifacts:
+  data/processed/customers.parquet
+  data/processed/transactions.parquet
+  data/processed/transactions_incremental.parquet
+  data/processed/quality_report.json
+  data/processed/engine_reconciliation_report.json
+  data/processed/pipeline_run_report.json</pre>
+                </div>
                 <h4>Airflow — evidence validation logs</h4>
-                <p>The final task reports <strong>PASS</strong>: 10 passed stages, 0 failed stages and 1 skipped stage. S3 upload was not requested in this particular run.</p>
+                <p>Transcribed excerpt from the supplied validation capture. It reports <strong>PASS</strong>, 10 passed stages, 0 failed stages and 1 skipped stage. The single skip reflects S3 upload not being requested in this run.</p>
+                <a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/src/validate_pipeline_evidence.py" target="_blank" rel="noreferrer">Open evidence-validation source ↗</a>
               </article>
               <div class="evidence-section-label evidence-section-label-inline"><span>02 / DATA PROCESSING EVIDENCE</span><h4>Quality, reconciliation and engineering design</h4></div>
               <article class="evidence-card evidence-quality-report-card">
