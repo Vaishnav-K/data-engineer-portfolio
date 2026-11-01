@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b1020">
   <meta name="description" content="Vaishnav K — Senior Data Engineer with 5 years of experience in Spark, Databricks, banking data platforms, AWS, and pipeline reliability.">
   <title>Vaishnav K | Senior Data Engineer</title>
-  <link rel="stylesheet" href="styles.css?v=20261101-10m-scale-proof">
+  <link rel="stylesheet" href="styles.css?v=20261102-hero-headers-lightbox">
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
@@ -35,9 +35,9 @@
     <section class="hero section-wrap" id="home">
       <div class="hero-copy">
         <div class="eyebrow"><span class="status-dot"></span> SENIOR DATA ENGINEER · BIG DATA · BANKING · CLOUD</div>
-        <div class="hero-name-glitch" data-text="VAISHNAV K" aria-label="Vaishnav K">VAISHNAV K</div>
-        <h1>Engineering data<br><span class="gradient-text">at scale.</span></h1>
-        <p class="hero-lead">I’m Vaishnav K, a Senior Data Engineer with <strong>5 years of experience</strong> building and supporting banking data pipelines across Spark, Databricks, Hadoop, and AWS. I focus on reliable processing, performance tuning, cloud migration, and data quality.</p>
+        <h1 class="hero-name">Vaishnav K</h1>
+        <p class="hero-tagline">Engineering data<br><span class="gradient-text">at scale.</span></p>
+        <p class="hero-lead">I’m a Senior Data Engineer with <strong>5 years of experience</strong> building and supporting banking data pipelines across Spark, Databricks, Hadoop, and AWS. I focus on reliable processing, performance tuning, cloud migration, and data quality.</p>
         <div class="hero-actions">
           <a class="button button-primary" href="#work">Explore my work <span>↘</span></a>
           <a class="button button-quiet" href="Vaishnav-K-Resume.pdf" target="_blank">View resume ↗</a>
@@ -188,18 +188,18 @@
             <p class="evidence-intro">Authentic Airflow and AWS console captures from the project are included below. The remaining panels are explanatory technical summaries, not live production consoles.</p>
             <div class="evidence-grid">
               <article class="evidence-card evidence-card-screenshot">
-                <a class="evidence-screenshot-link" href="assets/airflow-dag-success.webp" target="_blank" rel="noreferrer" aria-label="Open full-size Airflow successful local validation screenshot">
+                <button class="evidence-screenshot-trigger" type="button" data-screenshot-src="assets/airflow-dag-success.webp" data-screenshot-alt="Apache Airflow manual DAG run marked Success, with preflight, pipeline execution, and evidence-validation tasks all successful." data-screenshot-caption="Apache Airflow — successful local validation run" aria-label="Enlarge Airflow successful validation screenshot">
                   <img class="evidence-screenshot" src="assets/airflow-dag-success.webp" alt="Apache Airflow manual DAG run marked Success, with preflight, pipeline execution, and evidence-validation tasks all successful." loading="lazy" decoding="async">
-                  <span class="evidence-image-hint">OPEN IMAGE ↗</span>
-                </a>
+                  <span class="evidence-image-hint">VIEW FULL SIZE ⤢</span>
+                </button>
                 <h4>Apache Airflow — successful validation run</h4>
                 <p>Real Airflow UI capture showing all three tasks in the isolated local validation workflow completing successfully. This is local development evidence, not a production deployment.</p>
               </article>
               <article class="evidence-card evidence-card-screenshot">
-                <a class="evidence-screenshot-link" href="assets/aws-s3-raw-objects.webp" target="_blank" rel="noreferrer" aria-label="Open full-size Amazon S3 raw objects screenshot">
+                <button class="evidence-screenshot-trigger" type="button" data-screenshot-src="assets/aws-s3-raw-objects.webp" data-screenshot-alt="Amazon S3 console listing customers.csv, transactions_incremental.csv, and transactions.csv in the banking-data raw folder." data-screenshot-caption="Amazon S3 — synthetic raw data objects" aria-label="Enlarge Amazon S3 raw objects screenshot">
                   <img class="evidence-screenshot" src="assets/aws-s3-raw-objects.webp" alt="Amazon S3 console listing customers.csv, transactions_incremental.csv, and transactions.csv in the banking-data raw folder." loading="lazy" decoding="async">
-                  <span class="evidence-image-hint">OPEN IMAGE ↗</span>
-                </a>
+                  <span class="evidence-image-hint">VIEW FULL SIZE ⤢</span>
+                </button>
                 <h4>Amazon S3 — raw data storage</h4>
                 <p>Real AWS Console capture showing the three synthetic CSV source files under <code>banking-data/raw/</code>. Account and bucket identifiers have been obscured.</p>
               </article>
@@ -347,6 +347,16 @@
     </div></div></section>
   </main>
   <footer class="site-footer section-wrap"><a class="brand" href="#home"><span class="brand-mark">V.</span><span class="brand-name">VAISHNAV<span class="brand-divider">|</span><span class="brand-role">DATA ENGINEERING</span></span></a><span>Senior Data Engineer · Chennai, India</span><a href="#home">Back to top ↑</a></footer>
-  <script src="script.js?v=20261101-10m-scale-proof"></script>
+  <dialog class="evidence-lightbox" id="evidenceLightbox" aria-label="Project screenshot viewer">
+    <div class="evidence-lightbox-panel">
+      <button class="evidence-lightbox-close" id="evidenceLightboxClose" type="button" aria-label="Close screenshot viewer">×</button>
+      <figure class="evidence-lightbox-figure">
+        <img id="evidenceLightboxImage" src="" alt="">
+        <figcaption id="evidenceLightboxCaption"></figcaption>
+      </figure>
+      <p class="evidence-lightbox-hint">Click the image or outside it, or press Esc to close</p>
+    </div>
+  </dialog>
+  <script src="script.js?v=20261102-hero-lightbox"></script>
 </body>
 </html>
