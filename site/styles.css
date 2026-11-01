@@ -2617,3 +2617,95 @@ body::before {
   margin-top: 0 !important;
   align-self: flex-start !important;
 }
+
+
+/* Data-processing evidence: balanced rows with benchmark-backed architecture detail. */
+.evidence-data-grid > .evidence-card {
+  align-self: stretch !important;
+  height: auto !important;
+  min-height: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+.evidence-data-grid > .evidence-card > a:last-child {
+  margin-top: auto !important;
+  padding-top: 12px;
+}
+.evidence-architecture-card > p {
+  flex: 0 0 auto !important;
+}
+.architecture-benchmark {
+  margin: 8px 0 2px;
+  padding: 13px 14px 11px;
+  border: 1px solid rgba(107,220,242,.18);
+  border-radius: 8px;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(107,220,242,.08),transparent 58%),
+    linear-gradient(135deg,rgba(15,29,49,.9),rgba(7,14,27,.92));
+}
+.architecture-benchmark-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.architecture-benchmark-heading > span {
+  color: #77dff1;
+  font: 700 8px/1.4 'DM Mono',monospace;
+  letter-spacing: .12em;
+}
+.architecture-benchmark-heading > b {
+  color: #a8ecd0;
+  font: 800 9px/1.3 'DM Mono',monospace;
+  letter-spacing: .04em;
+}
+.architecture-benchmark-metrics {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 8px;
+}
+.architecture-benchmark-metrics > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 9px 8px;
+  border: 1px solid rgba(142,164,201,.12);
+  border-radius: 6px;
+  background: rgba(4,10,20,.35);
+}
+.architecture-benchmark-metrics strong {
+  color: #e5efff;
+  font-size: clamp(13px,1.3vw,17px);
+  line-height: 1.2;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
+}
+.architecture-benchmark-metrics span {
+  color: #91a4c0;
+  font-size: 8px;
+  line-height: 1.35;
+}
+.architecture-runtime {
+  margin-top: 10px;
+  color: #9aabc5;
+  font: 700 9px/1.5 'DM Mono',monospace;
+}
+.architecture-runtime i {
+  color: #66d8ed;
+  font-style: normal;
+  padding: 0 3px;
+}
+.architecture-benchmark-note {
+  margin: 8px 0 0 !important;
+  color: #8498b5 !important;
+  font-size: 9px !important;
+  line-height: 1.55 !important;
+}
+@media(max-width:650px) {
+  .architecture-benchmark { padding: 11px; }
+  .architecture-benchmark-metrics { gap: 5px; }
+  .architecture-benchmark-metrics > div { padding: 8px 6px; }
+  .architecture-benchmark-metrics strong { font-size: 13px; }
+}
