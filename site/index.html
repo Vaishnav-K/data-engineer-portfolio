@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b1020">
   <meta name="description" content="Vaishnav K — Senior Data Engineer with 5 years of experience in Spark, Databricks, banking data platforms, AWS, and pipeline reliability.">
   <title>Vaishnav K | Senior Data Engineer</title>
-  <link rel="stylesheet" href="styles.css?v=20261102-compact-evidence-cards">
+  <link rel="stylesheet" href="styles.css?v=20261102-benchmark-balanced-evidence">
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
@@ -261,7 +261,7 @@
               <span>02 / DATA PROCESSING EVIDENCE</span>
               <h4>Quality, reconciliation and architecture</h4>
             </div>
-            <div class="evidence-grid">
+            <div class="evidence-grid evidence-data-grid">
               <article class="evidence-card evidence-quality-report-card">
                 <div class="evidence-quality-report-visual">
                   <div class="quality-report-topline"><span>BASELINE VALIDATION / SYNTHETIC DATA</span><strong>PASS</strong></div>
@@ -280,7 +280,26 @@
                 <a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/docs/data-quality.md" target="_blank" rel="noreferrer">Read data quality and row reconciliation ↗</a>
                 <a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/src/compare_engines.py" target="_blank" rel="noreferrer">Inspect DuckDB / Spark reconciliation checks ↗</a>
               </article>
-              <article class="evidence-card"><div class="evidence-visual evidence-flow-visual"><span class="evidence-node">CSV sources</span><i>→</i><span class="evidence-node">ETL + quality</span><i>→</i><span class="evidence-node">Reports</span></div><h4>Pipeline architecture</h4><p>Batch and incremental processing, validation, anomaly screening, reconciliation and operational reports.</p><a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/docs/architecture.md" target="_blank" rel="noreferrer">Read architecture notes ↗</a></article>
+              <article class="evidence-card evidence-architecture-card">
+                <div class="evidence-visual evidence-flow-visual">
+                  <span class="evidence-node">CSV sources</span><i>→</i>
+                  <span class="evidence-node">ETL + quality</span><i>→</i>
+                  <span class="evidence-node">Reports</span>
+                </div>
+                <h4>Pipeline architecture & scale benchmark</h4>
+                <p>Batch and incremental ingestion flow through transformation, schema and quality checks, anomaly screening, cross-engine reconciliation and operational reporting.</p>
+                <div class="architecture-benchmark">
+                  <div class="architecture-benchmark-heading"><span>MEASURED LOCAL SPARK RUN</span><b>10M ROWS</b></div>
+                  <div class="architecture-benchmark-metrics">
+                    <div><strong>356.266s</strong><span>Elapsed time</span></div>
+                    <div><strong>28,068.91</strong><span>Rows / second</span></div>
+                    <div><strong>16</strong><span>Shuffle partitions</span></div>
+                  </div>
+                  <div class="architecture-runtime">Spark 3.5.7 <i>·</i> local[2] <i>·</i> synthetic transaction benchmark</div>
+                  <p class="architecture-benchmark-note">A measured local performance run, not a production SLA. The separate baseline demo retains its seeded data-quality cases.</p>
+                </div>
+                <a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/docs/architecture.md" target="_blank" rel="noreferrer">Read architecture notes ↗</a>
+              </article>
               <article class="evidence-card"><div class="evidence-visual evidence-s3-visual"><span class="s3-mark">S3</span><div><strong>banking-data / raw</strong><small>customers.csv</small><small>transactions.csv</small><small>transactions_incremental.csv</small></div><span class="evidence-status">CHECKSUM<br>VERIFIED</span></div><h4>Amazon S3 ingestion</h4><p>Checksum-aware upload and verification for generated raw CSV files, with audit reporting.</p><a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/src/s3_ingestion.py" target="_blank" rel="noreferrer">Inspect ingestion code ↗</a></article>
               <article class="evidence-card"><div class="evidence-visual evidence-quality-visual"><div><strong>10M</strong><small>valid transactions</small></div><div><strong>0</strong><small>quarantined in scale run</small></div><div><strong>PASS</strong><small>reconciliation</small></div></div><h4>10M scale quality & reconciliation</h4><p>Measured local Spark benchmark: 10 million synthetic rows validated, with zero quarantined records in this run and reconciliation passing. The separate baseline demo retains seeded quality cases.</p><a href="https://github.com/Vaishnav-K/enterprise-banking-data-platform/blob/main/README.md#demonstrated-results" target="_blank" rel="noreferrer">Review demonstrated results ↗</a></article>
             </div>
