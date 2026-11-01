@@ -3,7 +3,7 @@
 This repository contains only the source files for the professional portfolio website.
 
 - **Portfolio site:** https://vaishnav-k.github.io/data-engineer-portfolio/
-- **Featured banking data engineering project:** https://github.com/Vaishnav-K/ai-enhanced-banking-data-platform
+- **Featured banking data engineering project:** https://github.com/Vaishnav-K/enterprise-banking-data-platform
 
 ## Website structure
 

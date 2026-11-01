@@ -38,7 +38,7 @@ jobs:
           from pathlib import Path
 
           headers = {"User-Agent": "portfolio-metrics-build"}
-          baseline_base = "https://raw.githubusercontent.com/Vaishnav-K/ai-enhanced-banking-data-platform/main/data/raw"
+          baseline_base = "https://raw.githubusercontent.com/Vaishnav-K/enterprise-banking-data-platform/main/data/raw"
           baseline = {
               "generated_at": datetime.now(timezone.utc).isoformat(),
               "source": "measured from public synthetic CSV inputs in the banking data project",
@@ -53,7 +53,7 @@ jobs:
 
           baseline["total_bytes"] = baseline["customers"]["bytes"] + baseline["transactions"]["bytes"]
 
-          report_url = "https://raw.githubusercontent.com/Vaishnav-K/ai-enhanced-banking-data-platform/main/reports/scale-benchmark-10m-results-public.json"
+          report_url = "https://raw.githubusercontent.com/Vaishnav-K/enterprise-banking-data-platform/main/reports/scale-benchmark-10m-results-public.json"
           request = urllib.request.Request(report_url, headers=headers)
           with urllib.request.urlopen(request, timeout=30) as response:
               benchmark = json.loads(response.read().decode("utf-8"))
