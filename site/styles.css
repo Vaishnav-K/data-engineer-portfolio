@@ -2709,3 +2709,11 @@ body::before {
   .architecture-benchmark-metrics > div { padding: 8px 6px; }
   .architecture-benchmark-metrics strong { font-size: 13px; }
 }
+
+
+/* Profile portrait framing: give the wider Option 1 portrait room to show both shoulders. */
+.profile-card { grid-template-columns: 1fr 1.05fr; }
+.profile-image { object-position: center center; }
+@media (max-width: 650px) {
+  .profile-card { grid-template-columns: 1fr 1.05fr; }
+}
