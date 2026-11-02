@@ -2745,3 +2745,31 @@ body {
     to { opacity: .23; filter: blur(118px); }
   }
 }
+
+
+/* Stronger cyberpunk violet: visible purple on the right, balanced by the existing blue. */
+body {
+  background-image:
+    radial-gradient(ellipse 64% 42% at 100% 12%, rgba(116, 70, 255, .32), transparent 70%),
+    radial-gradient(ellipse 48% 34% at 92% 48%, rgba(91, 54, 196, .22), transparent 72%),
+    radial-gradient(ellipse 62% 40% at 100% 88%, rgba(126, 58, 220, .25), transparent 72%),
+    radial-gradient(ellipse 52% 38% at 0% 42%, rgba(35, 128, 205, .15), transparent 74%);
+  background-attachment: fixed;
+}
+.ambient-one {
+  background: linear-gradient(135deg, #6559ed 5%, #398ed0 95%);
+  opacity: .2;
+}
+.ambient-two {
+  background: linear-gradient(145deg, #087d9e 0%, #7650e8 55%, #8a43d6 100%);
+  opacity: .28;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ambient-two {
+    animation: violet-blue-breathe 16s ease-in-out infinite alternate;
+  }
+  @keyframes violet-blue-breathe {
+    from { opacity: .22; filter: blur(104px); }
+    to { opacity: .32; filter: blur(122px); }
+  }
+}
