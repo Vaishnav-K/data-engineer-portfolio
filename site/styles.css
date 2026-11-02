@@ -2818,3 +2818,27 @@ body {
     font-size: 11px !important;
   }
 }
+
+
+/* Increase all main section titles except the Technical Toolkit title. */
+#experience .section-heading h2,
+#architecture .section-heading h2,
+#scale .section-heading h2,
+#work .section-heading h2,
+#education .section-heading h2,
+.contact-inner h2,
+#technology-explorer .tech-explorer-heading h2 {
+  font-size: clamp(34px, 3.45vw, 43px) !important;
+  line-height: 1.14 !important;
+}
+@media (max-width: 760px) {
+  #experience .section-heading h2,
+  #architecture .section-heading h2,
+  #scale .section-heading h2,
+  #work .section-heading h2,
+  #education .section-heading h2,
+  .contact-inner h2,
+  #technology-explorer .tech-explorer-heading h2 {
+    font-size: clamp(28px, 7vw, 35px) !important;
+  }
+}
