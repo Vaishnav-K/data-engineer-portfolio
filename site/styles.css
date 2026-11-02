@@ -2717,3 +2717,31 @@ body::before {
 @media (max-width: 650px) {
   .profile-card { grid-template-columns: 1fr 1.05fr; }
 }
+
+
+/* Reversible blue-violet ambient glow layer across the full portfolio. */
+body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 58% 34% at 100% 8%, rgba(137, 83, 220, .17), transparent 72%),
+    radial-gradient(ellipse 52% 38% at 0% 42%, rgba(35, 128, 205, .13), transparent 74%),
+    radial-gradient(ellipse 58% 34% at 100% 78%, rgba(112, 67, 194, .12), transparent 74%);
+  background-attachment: fixed;
+}
+.ambient-one {
+  background: linear-gradient(135deg, #6559ed 5%, #398ed0 95%);
+  opacity: .19;
+}
+.ambient-two {
+  background: linear-gradient(145deg, #087d9e 0%, #7851d6 100%);
+  opacity: .19;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ambient-two {
+    animation: violet-blue-breathe 18s ease-in-out infinite alternate;
+  }
+  @keyframes violet-blue-breathe {
+    from { opacity: .15; filter: blur(100px); }
+    to { opacity: .23; filter: blur(118px); }
+  }
+}
