@@ -2773,3 +2773,48 @@ body {
     to { opacity: .32; filter: blur(122px); }
   }
 }
+
+
+/* Section heading hierarchy: uppercase titles, quieter supporting copy. */
+.section-heading h2,
+.contact-inner h2,
+.tech-explorer-heading h2 {
+  text-transform: uppercase;
+  letter-spacing: .025em;
+  font-size: clamp(25px, 2.75vw, 34px) !important;
+  line-height: 1.18 !important;
+  max-width: 100%;
+  text-wrap: balance;
+}
+.section-heading {
+  grid-template-columns: minmax(0, 1.35fr) minmax(220px, .65fr);
+  align-items: end;
+  column-gap: 34px;
+  row-gap: 10px;
+}
+.section-heading > p {
+  max-width: 360px !important;
+  justify-self: end;
+  font-size: 11px !important;
+  line-height: 1.65 !important;
+  color: #8f9db8 !important;
+}
+.contact-inner h2 {
+  max-width: 100%;
+}
+@media (max-width: 760px) {
+  .section-heading {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+  .section-heading h2,
+  .contact-inner h2,
+  .tech-explorer-heading h2 {
+    font-size: clamp(23px, 6vw, 30px) !important;
+  }
+  .section-heading > p {
+    justify-self: start;
+    max-width: 620px !important;
+    font-size: 11px !important;
+  }
+}
