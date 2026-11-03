@@ -2,7 +2,7 @@
   const audio = document.getElementById("ambientAudioTrack");
   if (!audio) return;
 
-  const TARGET_VOLUME = 0.25;
+  const TARGET_VOLUME = 0.20;
   const FADE_DURATION_MS = 35000;
   let fadeFrame = 0;
 
@@ -15,7 +15,7 @@
     const startedAt = performance.now();
     const tick = (now) => {
       const progress = Math.min(1, (now - startedAt) / FADE_DURATION_MS);
-      // Gentle ease-in: starts almost silent and reaches 25% after 35 seconds.
+      // Gentle ease-in: starts almost silent and reaches 20% after 35 seconds.
       audio.volume = TARGET_VOLUME * progress * progress;
       if (progress < 1 && !audio.paused) {
         fadeFrame = requestAnimationFrame(tick);
