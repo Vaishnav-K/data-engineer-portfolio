@@ -556,7 +556,7 @@ filterButtons.forEach((button) => {
 })();
 
 
-/* Opt-in ambient soundtrack: looping playback with a slow, gentle fade-in. */
+/* Ambient soundtrack: best-effort autoplay with a very slow, gentle fade-in. */
 (() => {
   const player = document.getElementById("ambientAudio");
   const audio = document.getElementById("ambientAudioTrack");
@@ -564,8 +564,8 @@ filterButtons.forEach((button) => {
   const volume = document.getElementById("ambientAudioVolume");
   if (!player || !audio || !toggle || !volume) return;
 
-  const TARGET_VOLUME = 0.18;
-  const FADE_DURATION_MS = 9000;
+  const MAX_VOLUME = 0.12;
+  const FADE_DURATION_MS = 35000;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let fadeFrame = 0;
   let fadeStartedAt = 0;
@@ -573,7 +573,9 @@ filterButtons.forEach((button) => {
 
   audio.loop = true;
   audio.volume = 0;
+  audio.muted = true;
 
+  const selectedVolume = () => Math.min(MAX_VOLUME, Number(volume.value) / 100 * MAX_VOLUME);
   const setPlayingUi = (playing) => {
     player.classList.toggle("is-playing", playing);
     toggle.setAttribute("aria-pressed", String(playing));
@@ -581,39 +583,13 @@ filterButtons.forEach((button) => {
     const label = toggle.querySelector(".ambient-audio-label");
     if (label) label.textContent = playing ? "Music playing" : "Ambient audio";
   };
-
   const stopFade = () => {
     if (fadeFrame) cancelAnimationFrame(fadeFrame);
     fadeFrame = 0;
   };
-
   const fadeUp = () => {
     stopFade();
-    if (reducedMotion) {
-      audio.volume = Math.min(TARGET_VOLUME, Number(volume.value) / 100 * TARGET_VOLUME);
-      return;
-    }
-    fadeStartedAt = performance.now();
-    startVolume = audio.volume;
-    const selectedVolume = Number(volume.value) / 100 * TARGET_VOLUME;
-    const target = Math.min(TARGET_VOLUME, selectedVolume);
-    const tick = (now) => {
-      const progress = Math.min(1, (now - fadeStartedAt) / FADE_DURATION_MS);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      audio.volume = Math.min(TARGET_VOLUME, startVolume + (target - startVolume) * eased);
-      if (progress < 1 && !audio.paused) fadeFrame = requestAnimationFrame(tick);
-      else fadeFrame = 0;
-    };
-    fadeFrame = requestAnimationFrame(tick);
-  };
-
-  const fadeToVolume = () => {
-    stopFade();
-    const target = Number(volume.value) / 100 * TARGET_VOLUME;
-    if (audio.paused) {
-      audio.volume = 0;
-      return;
-    }
+    const target = selectedVolume();
     if (reducedMotion) {
       audio.volume = target;
       return;
@@ -621,13 +597,52 @@ filterButtons.forEach((button) => {
     fadeStartedAt = performance.now();
     startVolume = audio.volume;
     const tick = (now) => {
-      const progress = Math.min(1, (now - fadeStartedAt) / 650);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      audio.volume = Math.max(0, Math.min(TARGET_VOLUME, startVolume + (target - startVolume) * eased));
+      const progress = Math.min(1, (now - fadeStartedAt) / FADE_DURATION_MS);
+      // Ease-in keeps the opening moments especially quiet.
+      const eased = progress * progress;
+      audio.volume = Math.min(MAX_VOLUME, startVolume + (target - startVolume) * eased);
       if (progress < 1 && !audio.paused) fadeFrame = requestAnimationFrame(tick);
       else fadeFrame = 0;
     };
     fadeFrame = requestAnimationFrame(tick);
+  };
+  const fadeToVolume = () => {
+    stopFade();
+    const target = selectedVolume();
+    if (audio.paused) return;
+    if (reducedMotion) {
+      audio.volume = target;
+      return;
+    }
+    fadeStartedAt = performance.now();
+    startVolume = audio.volume;
+    const tick = (now) => {
+      const progress = Math.min(1, (now - fadeStartedAt) / 700);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      audio.volume = Math.max(0, Math.min(MAX_VOLUME, startVolume + (target - startVolume) * eased));
+      if (progress < 1 && !audio.paused) fadeFrame = requestAnimationFrame(tick);
+      else fadeFrame = 0;
+    };
+    fadeFrame = requestAnimationFrame(tick);
+  };
+  const startPlayback = async ({ fromGesture = false } = {}) => {
+    try {
+      stopFade();
+      audio.volume = 0;
+      audio.muted = !fromGesture;
+      await audio.play();
+      // Muted autoplay is broadly permitted; once playback starts, reveal sound
+      // gradually. A visitor gesture also permits audible playback directly.
+      audio.muted = false;
+      setPlayingUi(true);
+      fadeUp();
+      return true;
+    } catch (error) {
+      setPlayingUi(false);
+      const label = toggle.querySelector(".ambient-audio-label");
+      if (label) label.textContent = "Tap to play";
+      return false;
+    }
   };
 
   toggle.addEventListener("click", async () => {
@@ -638,24 +653,13 @@ filterButtons.forEach((button) => {
       setPlayingUi(false);
       return;
     }
-
-    try {
-      audio.volume = 0;
-      await audio.play();
-      setPlayingUi(true);
-      fadeUp();
-    } catch (error) {
-      setPlayingUi(false);
-      const label = toggle.querySelector(".ambient-audio-label");
-      if (label) label.textContent = "Tap to retry";
-    }
+    await startPlayback({ fromGesture: true });
   });
-
   volume.addEventListener("input", fadeToVolume);
   audio.addEventListener("pause", () => setPlayingUi(false));
   audio.addEventListener("play", () => setPlayingUi(true));
-  audio.addEventListener("ended", () => {
-    // The native loop attribute restarts playback without a new sound burst.
-    setPlayingUi(true);
-  });
+
+  // Attempt autoplay after the document has loaded. Browsers may still require
+  // a visitor gesture before allowing audible playback.
+  startPlayback();
 })();
