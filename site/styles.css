@@ -3107,3 +3107,37 @@ body {
     padding: 19px;
   }
 }
+
+
+/* Mobile portrait: show the complete photo at full card width. */
+@media screen and (max-width: 800px) {
+  .hero-visual {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+  .profile-card {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .profile-image-wrap {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: auto !important;
+    overflow: hidden;
+  }
+  .profile-image {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+  }
+  .profile-info {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
