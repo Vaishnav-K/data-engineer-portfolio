@@ -3051,3 +3051,59 @@ body {
     padding: 6px 8px;
   }
 }
+
+
+/* Mobile profile card: give the portrait and details full-width space. */
+@media (max-width: 650px) {
+  .hero-visual {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+  .profile-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .profile-image-wrap {
+    width: 100%;
+    height: clamp(280px, 82vw, 390px);
+    min-height: 0;
+  }
+  .profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 24%;
+  }
+  .profile-info {
+    width: 100%;
+    min-width: 0;
+    padding: 22px;
+  }
+  .profile-info .eyebrow {
+    font-size: 9px;
+  }
+  .profile-info h2 {
+    font-size: clamp(25px, 7vw, 32px);
+  }
+  .profile-info > p {
+    font-size: 13px;
+  }
+  .profile-facts strong {
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .profile-facts span {
+    font-size: 10px;
+  }
+  .profile-resume {
+    font-size: 13px;
+  }
+}
+@media (max-width: 390px) {
+  .profile-image-wrap {
+    height: 300px;
+  }
+  .profile-info {
+    padding: 19px;
+  }
+}
