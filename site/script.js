@@ -1,144 +1,665 @@
-(() => {
-  // Ambient soundtrack: autoplay attempt with a 35-second fade to 20%.
-  const audio = document.getElementById("ambientAudioTrack");
-  if (audio) {
-    const TARGET_VOLUME = 0.20;
-    const FADE_DURATION_MS = 35000;
-    let fadeFrame = 0;
-    audio.loop = true;
-    audio.volume = 0;
-    audio.muted = true;
-    const startAutoplay = async () => {
-      if (!audio.paused) return;
-      try {
-        audio.muted = true;
-        audio.volume = 0;
-        await audio.play();
-        audio.muted = false;
-        const startedAt = performance.now();
-        const tick = (now) => {
-          const progress = Math.min(1, (now - startedAt) / FADE_DURATION_MS);
-          audio.volume = TARGET_VOLUME * progress * progress;
-          if (progress < 1 && !audio.paused) fadeFrame = requestAnimationFrame(tick);
-          else fadeFrame = 0;
-        };
-        if (fadeFrame) cancelAnimationFrame(fadeFrame);
-        fadeFrame = requestAnimationFrame(tick);
-      } catch (_) {
-        const retry = () => startAutoplay();
-        window.addEventListener("pointerdown", retry, { once: true });
-        window.addEventListener("keydown", retry, { once: true });
-        window.addEventListener("touchstart", retry, { once: true, passive: true });
-      }
-    };
-    startAutoplay();
+const menuToggle = document.getElementById("menuToggle");
+const mainNav = document.getElementById("mainNav");
+
+menuToggle.addEventListener("click", () => {
+  const isOpen = mainNav.classList.toggle("open");
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
+  menuToggle.textContent = isOpen ? "×" : "☰";
+});
+
+mainNav.querySelectorAll("a").forEach((link) => {
+  link.addEventListener("click", () => {
+    mainNav.classList.remove("open");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.textContent = "☰";
+  });
+});
+
+
+/* Interactive pipeline walkthrough: explanatory content only, no fake live metrics. */
+const stageContent = {
+  ingest: {kicker:"STAGE 01 / INGESTION",title:"Bring source data in safely.",description:"Load synthetic customer and transaction files, including an incremental batch, as the inputs to the pipeline.",focus:"Repeatable input handling",output:"Raw source files ready for processing",tech:"Python · CSV · AWS S3"},
+  transform: {kicker:"STAGE 02 / PROCESSING",title:"Transform data with Spark.",description:"Apply batch and incremental processing to the synthetic banking data using the project's PySpark pipeline.",focus:"Consistent, repeatable transformations",output:"Processed customer and transaction datasets",tech:"Python · PySpark · Spark SQL"},
+  quality: {kicker:"STAGE 03 / DATA QUALITY",title:"Catch issues before downstream use.",description:"Run data-quality checks and anomaly screening, then retain a machine-readable report for the run.",focus:"Validation and anomaly screening",output:"Quality results and diagnostic evidence",tech:"Python · Data quality checks"},
+  reconcile: {kicker:"STAGE 04 / RECONCILIATION",title:"Compare results across processing paths.",description:"Use reconciliation checks to help identify mismatches between pipeline outputs and expected results.",focus:"Cross-engine and output consistency",output:"Reconciliation outcome",tech:"SQL · Spark · Reconciliation checks"},
+  operate: {kicker:"STAGE 05 / ORCHESTRATION",title:"Make the run observable and repeatable.",description:"Run the pipeline through Docker-based Airflow orchestration, validate the generated report, and upload raw inputs to S3.",focus:"Orchestration, status validation and recovery",output:"Pipeline run report and S3 ingestion result",tech:"Docker · Apache Airflow · AWS S3"}
+};
+const stageButtons = Array.from(document.querySelectorAll(".stage-button"));
+const stagePanel = document.getElementById("stage-detail");
+stageButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const data = stageContent[button.dataset.stage];
+    if (!data) return;
+    stageButtons.forEach((item) => {
+      const active = item === button;
+      item.classList.toggle("active", active);
+      item.setAttribute("aria-selected", String(active));
+    });
+    stagePanel.setAttribute("aria-labelledby", button.id);
+    ["kicker","title","description","focus","output","tech"].forEach((key) => {
+      const node = document.getElementById("stage-" + key);
+      if (node) node.textContent = data[key];
+    });
+  });
+});
+
+/* Project filters keep the public work scannable for technical recruiters. */
+const filterButtons = Array.from(document.querySelectorAll(".filter-button"));
+const projectCards = Array.from(document.querySelectorAll(".project-grid .project-card"));
+filterButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const filter = button.dataset.filter;
+    filterButtons.forEach((item) => {
+      const active = item === button;
+      item.classList.toggle("active", active);
+      item.setAttribute("aria-pressed", String(active));
+    });
+    projectCards.forEach((card) => {
+      const categories = (card.dataset.categories || "").split(/\s+/);
+      card.hidden = filter !== "all" && !categories.includes(filter);
+    });
+  });
+});
+
+
+/* Build-refreshed dataset metrics and interactive illustrative scale chart. */
+(async function initializeScaleDashboard() {
+  const byId = (id) => document.getElementById(id);
+  const formatCount = (value) => new Intl.NumberFormat("en-US").format(value);
+  const formatBytes = (value) => value >= 1e9
+    ? (value / 1e9).toFixed(2) + " GB"
+    : value >= 1e6
+      ? (value / 1e6).toFixed(2) + " MB"
+      : value >= 1e3
+        ? (value / 1e3).toFixed(1) + " KB"
+        : value + " B";
+
+  const benchmarkFallback = {
+    status: "PASS",
+    run_started_at_utc: "2026-10-28T19:50:21.887746+00:00",
+    workload: {
+      customers: 100000,
+      raw_transactions: 10000000,
+      deduplicated_transactions: 10000000,
+      valid_transactions: 10000000,
+      quarantined_transactions: 0
+    },
+    reconciliation: { passed: true },
+    execution: {
+      spark_version: "3.5.7",
+      master: "local[2]",
+      elapsed_seconds: 356.266,
+      throughput_raw_transactions_per_second: 28068.91
+    },
+    output_sizes_bytes: { valid_transactions_csv: 660561106 }
+  };
+  const baselineFallback = {
+    customers: { rows: 500 },
+    transactions: { rows: 10004 },
+    total_bytes: 620300
+  };
+
+  async function readJson(path) {
+    const response = await fetch(new URL(path + "?v=" + Date.now(), document.baseURI), { cache: "no-store" });
+    if (!response.ok) throw new Error("Could not load " + path);
+    return response.json();
   }
 
-  // Interactive core technology map.
+  let benchmark = benchmarkFallback;
+  try {
+    benchmark = await readJson("data/scale-benchmark-metrics.json");
+  } catch (_) {
+    // Committed report values are the fallback; no client-side values are inferred from the baseline demo.
+  }
+
+  const workload = benchmark.workload || benchmarkFallback.workload;
+  const execution = benchmark.execution || benchmarkFallback.execution;
+  const output = benchmark.output_sizes_bytes || benchmarkFallback.output_sizes_bytes;
+  const passed = benchmark.status === "PASS" && benchmark.reconciliation?.passed === true;
+
+  if (byId("metric-transactions")) byId("metric-transactions").textContent = formatCount(workload.raw_transactions);
+  if (byId("metric-customers")) byId("metric-customers").textContent = formatCount(workload.customers);
+  if (byId("metric-status")) {
+    byId("metric-status").textContent = passed ? "PASS" : "CHECK";
+    byId("metric-status").classList.toggle("metric-pass", passed);
+  }
+  if (byId("metric-runtime")) byId("metric-runtime").textContent = Number(execution.elapsed_seconds).toFixed(3) + " sec";
+  if (byId("metric-throughput")) byId("metric-throughput").textContent =
+    formatCount(Math.round(execution.throughput_raw_transactions_per_second * 100) / 100) + " rows/sec";
+  if (byId("metric-output-size")) byId("metric-output-size").textContent = formatBytes(output.valid_transactions_csv);
+
+  let baseline = baselineFallback;
+  try {
+    baseline = await readJson("data/pipeline-metrics.json");
+  } catch (_) {
+    // Fallback values describe the published compact baseline fixture, not the benchmark.
+  }
+  if (byId("baseline-customers")) byId("baseline-customers").textContent = formatCount(baseline.customers.rows);
+  if (byId("baseline-transactions")) byId("baseline-transactions").textContent = formatCount(baseline.transactions.rows);
+  if (byId("baseline-footprint")) byId("baseline-footprint").textContent = formatBytes(baseline.total_bytes);
+
+  if (byId("metric-updated")) {
+    const date = benchmark.run_started_at_utc
+      ? new Date(benchmark.run_started_at_utc).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })
+      : "published evidence";
+    byId("metric-updated").textContent = "Measured benchmark · " + date + " · " +
+      (execution.spark_version || "Spark") + " / " + (execution.master || "local");
+  }
+})();
+
+
+/* Technology carousel: selected stack item rotates into the centre; graph root stays centred. */
+(() => {
+  const wheel = document.getElementById("techWheel");
   const explorer = document.getElementById("technology-explorer");
   const graph = document.getElementById("technology-graph");
-  const mapTitle = document.getElementById("tech-map-title");
-  const mapType = document.getElementById("tech-map-type");
-  const mapDescription = document.getElementById("tech-map-description");
-  const mapTags = document.getElementById("tech-map-tags");
-  const techData = {
-    overview: ["Data Engineering Stack", "STACK OVERVIEW", "A connected stack spanning distributed processing, lakehouse storage, cloud services, data movement and analytics.", ["Apache Spark","Databricks","PySpark / Scala","AWS","SQL","ETL / ELT","Delta Lake"]],
-    spark: ["Apache Spark", "PROCESSING ENGINE", "Distributed processing for large-scale batch and streaming workloads.", ["PySpark","Spark SQL","Structured Streaming","Hadoop"]],
-    databricks: ["Databricks & Lakehouse", "LAKEHOUSE PLATFORM", "Managed data engineering workflows, Delta Lake storage and governed analytics.", ["Databricks","Delta Lake","Unity Catalog","Workflows"]],
-    languages: ["PySpark / Scala", "LANGUAGES", "Programming and query languages used to build transformations and data applications.", ["Python","PySpark","Scala","SQL","Shell"]],
-    aws: ["AWS Cloud", "CLOUD & STORAGE", "Cloud storage, compute and analytics services for scalable data platforms.", ["S3","EMR","EC2","Glue","Athena","Redshift"]],
-    sql: ["SQL & Analytics", "QUERY & ANALYTICS", "Querying, transforming and validating structured data across analytical engines.", ["Spark SQL","Hive","Impala","Athena","Redshift"]],
-    etl: ["ETL / ELT", "DATA MOVEMENT", "Reliable ingestion, transformation and delivery patterns for batch and incremental pipelines.", ["Batch","Incremental loads","CDC","Data validation"]],
-    delta: ["Delta Lake", "TABLE FORMAT", "Reliable lakehouse tables with transactional writes, schema controls and versioned data.", ["ACID transactions","Time travel","Schema evolution","Unity Catalog"]]
-  };
-  const svgNS = "http://www.w3.org/2000/svg";
-  function svgEl(name, attrs, text) {
-    const el = document.createElementNS(svgNS, name);
-    Object.entries(attrs || {}).forEach(([k,v]) => el.setAttribute(k, v));
-    if (text) el.textContent = text;
-    return el;
-  }
-  function renderTech(key) {
-    if (!graph || !techData[key]) return;
-    const item = techData[key];
-    mapType.textContent = item[1];
-    mapTitle.textContent = item[0];
-    mapDescription.textContent = item[2];
-    mapTags.replaceChildren(...item[3].map(label => {
-      const span = document.createElement("span");
-      span.className = "tech-map-tag";
-      span.textContent = label;
-      return span;
-    }));
-    graph.replaceChildren();
-    const rootX = 470, rootY = 155;
-    const nodes = item[3].slice(0, 7);
-    const positions = nodes.map((_,i) => {
-      const angle = (-Math.PI/2) + (Math.PI*2*i/nodes.length);
-      return {x:470+330*Math.cos(angle), y:155+112*Math.sin(angle)};
-    });
-    positions.forEach(p => graph.appendChild(svgEl("line",{x1:rootX,y1:rootY,x2:p.x,y2:p.y,class:"tech-graph-edge"})));
-    nodes.forEach((label,i) => {
-      const p=positions[i], g=svgEl("g",{class:"tech-graph-node",role:"button",tabindex:"0","aria-label":"Explore "+label});
-      g.appendChild(svgEl("rect",{x:p.x-65,y:p.y-19,width:130,height:38,rx:8}));
-      g.appendChild(svgEl("text",{x:p.x,y:p.y+1},label));
-      const activate=()=>{mapType.textContent="STACK COMPONENT";mapTitle.textContent=label;mapDescription.textContent=label+" is part of the "+item[0]+" workflow shown in this technology map.";};
-      g.addEventListener("click",activate);
-      g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();activate();}});
-      graph.appendChild(g);
-    });
-    const root=svgEl("g",{class:"tech-graph-node tech-graph-root"});
-    root.appendChild(svgEl("rect",{x:355,y:124,width:230,height:62,rx:12}));
-    root.appendChild(svgEl("text",{x:470,y:155},key==="overview"?"DATA PLATFORM":item[0]));
-    graph.appendChild(root);
-  }
-  function openExplorer(key) {
-    if (!explorer) return;
-    explorer.hidden = false;
-    document.querySelectorAll("[data-tech-select]").forEach(btn => {
-      const active=btn.dataset.techSelect===key;
-      btn.setAttribute("aria-expanded",String(active));
-    });
-    renderTech(key);
-    explorer.scrollIntoView({behavior:"smooth",block:"nearest"});
-  }
-  document.querySelectorAll("[data-tech-select]").forEach(btn => btn.addEventListener("click",()=>openExplorer(btn.dataset.techSelect)));
-  const closeMap=document.getElementById("techMapClose");
-  if(closeMap) closeMap.addEventListener("click",()=>{
-    explorer.hidden=true;
-    document.querySelectorAll("[data-tech-select]").forEach(btn=>btn.setAttribute("aria-expanded","false"));
-  });
+  const overviewTrigger = document.getElementById("coreTechTrigger");
+  const closeButton = document.getElementById("techMapClose");
+  if (!wheel || !explorer || !graph || !overviewTrigger) return;
 
-  // Click-to-expand technical toolkit cards (works on touch and desktop).
-  const skillButtons=[...document.querySelectorAll(".skill-card-trigger")];
-  function closeSkills(except) {
-    skillButtons.forEach(button=>{
-      if(button===except)return;
-      button.setAttribute("aria-expanded","false");
-      const panel=document.getElementById(button.getAttribute("aria-controls"));
-      if(panel) panel.hidden=true;
-      const card=button.closest(".skill-card");
-      if(card)card.classList.remove("is-open");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const techButtons = Array.from(wheel.querySelectorAll(".technology-chip"));
+  const getButtonsInVisualOrder = () => Array.from(wheel.querySelectorAll(".technology-chip"));
+  const views = {
+    overview: {
+      type:"STACK OVERVIEW",root:"Data Engineering Stack",title:"Connected delivery stack",
+      description:"The technologies work together across ingestion, distributed processing, lakehouse storage, orchestration, cloud services, governance and quality controls.",
+      nodes:[["Spark & PySpark","Batch + streaming"],["Databricks & Delta","Lakehouse tables"],["AWS data services","Storage + compute"],["SQL + ETL / ELT","Transform + model"],["Orchestration","Scheduling + retries"],["Quality & lineage","Validation + traceability"]],
+      tags:["Spark","Databricks","AWS","SQL","ETL / ELT","Delta Lake","Data Quality"]
+    },
+    spark: {
+      type:"DISTRIBUTED PROCESSING",root:"Apache Spark",title:"Spark processing ecosystem",
+      description:"Distributed batch transformations, SQL processing, streaming ingestion and performance tuning across banking-data workloads.",
+      nodes:[["PySpark / DataFrames","Python processing"],["Scala","JVM workloads"],["Spark SQL","Query transformations"],["Structured Streaming","Event processing"],["Kafka","Streaming integration"],["Hive / HDFS","Data lake ecosystem"]],
+      tags:["Partitioning","Caching","Broadcast joins","AQE","Predicate pushdown","Batch + streaming"]
+    },
+    databricks: {
+      type:"LAKEHOUSE PLATFORM",root:"Databricks",title:"Lakehouse and governance",
+      description:"Databricks and Delta technologies support reliable table processing, incremental patterns, access controls and governed analytics.",
+      nodes:[["Delta Lake","ACID table storage"],["Unity Catalog","Access + lineage"],["Workflows","Job orchestration"],["Medallion design","Bronze / Silver / Gold"],["AWS S3","Object storage"],["Delta pipelines","Managed transformation"]],
+      tags:["Incremental processing","Table quality","RBAC","Lineage","Lakehouse"]
+    },
+    languages: {
+      type:"LANGUAGES & INTERFACES",root:"PySpark / Scala",title:"Languages and interfaces",
+      description:"Language and query layers connect reusable pipeline logic, SQL transformations, automation scripts and version-controlled delivery.",
+      nodes:[["Python","Pipeline utilities"],["SQL / Spark SQL","Data transformation"],["Shell scripting","Automation"],["DataFrames","Distributed API"],["Git","Version control"],["Parquet / JSON","Data formats"]],
+      tags:["Reusable jobs","Testing","Debugging","Automation"]
+    },
+    aws: {
+      type:"CLOUD DATA SERVICES",root:"AWS",title:"Cloud storage and compute",
+      description:"Cloud services cover object storage, distributed compute, event streaming, cataloguing, querying and permission boundaries.",
+      nodes:[["Amazon S3","Object storage"],["Amazon EMR","Managed Spark"],["Amazon EC2","Compute"],["IAM","Identity + access"],["Glue / Lambda","Catalog + functions"],["Athena / Redshift","Query + warehouse"]],
+      tags:["Kinesis","Cloud migration","S3 ingestion","Access control"]
+    },
+    sql: {
+      type:"DATA QUERY & MODELING",root:"SQL",title:"Query, validate, model",
+      description:"SQL supports transformation logic, reconciliation, aggregation and analytical outputs alongside Spark SQL and data-quality checks.",
+      nodes:[["Spark SQL","Distributed query"],["Hive SQL","Warehouse queries"],["DuckDB","Local analytics engine"],["Reconciliation","Cross-path checks"],["Dimensional models","Facts + dimensions"],["Quality assertions","Rules + validations"]],
+      tags:["Aggregations","Window functions","CTEs","Reconciliation","Data modeling"]
+    },
+    etl: {
+      type:"PIPELINE DESIGN",root:"ETL / ELT",title:"Reliable data movement",
+      description:"The ingestion and transformation pattern determines where data is validated, how changes are processed, and how failures are recovered.",
+      nodes:[["Extract / ingest","Source acquisition"],["Transform","Business rules"],["Load / publish","Destination tables"],["Incremental loads","Process new changes"],["Idempotency","Safe re-runs"],["Data quality","Reject + quarantine"]],
+      tags:["Batch processing","Incremental ETL","Retries","Reconciliation","Audit trail"]
+    },
+    delta: {
+      type:"LAKEHOUSE STORAGE",root:"Delta Lake",title:"Reliable lakehouse tables",
+      description:"Delta Lake provides table-oriented storage patterns for incremental processing, consistent writes and quality-controlled analytical datasets.",
+      nodes:[["ACID transactions","Consistent writes"],["MERGE","Upserts + CDC"],["Time travel","Versioned data"],["Schema enforcement","Safer writes"],["OPTIMIZE","File layout tuning"],["Unity Catalog","Governed access"]],
+      tags:["Bronze / Silver / Gold","Incremental pipelines","Schema controls","Performance tuning"]
+    }
+  };
+
+  const svgNS = "http://www.w3.org/2000/svg";
+  const makeSvg = (tag, attrs, text) => {
+    const element = document.createElementNS(svgNS, tag);
+    Object.entries(attrs).forEach(([key,value]) => element.setAttribute(key,String(value)));
+    if (text !== undefined) element.textContent = text;
+    return element;
+  };
+  const addText = (parent,x,y,text,className) => parent.append(makeSvg("text",{x,y,class:className || ""},text));
+
+  function drawView(data) {
+    graph.replaceChildren();
+    graph.setAttribute("viewBox","0 0 940 330");
+    const root={x:350,y:128,w:240,h:72,cx:470,cy:164};
+    const positions=[
+      {x:20,y:20,w:200,h:60},{x:370,y:9,w:200,h:60},{x:720,y:20,w:200,h:60},
+      {x:20,y:250,w:200,h:60},{x:370,y:261,w:200,h:60},{x:720,y:250,w:200,h:60}
+    ];
+    positions.forEach(pos=>{
+      const nodeCx=pos.x+pos.w/2, nodeCy=pos.y+pos.h/2;
+      const sourceX=nodeCx<root.cx?root.x:nodeCx>root.cx?root.x+root.w:root.cx;
+      const sourceY=nodeCy<root.cy?root.y:root.y+root.h;
+      graph.append(makeSvg("line",{x1:sourceX,y1:sourceY,x2:nodeCx,y2:nodeCy,class:"tech-graph-edge"}));
+    });
+    positions.forEach((pos,index)=>{
+      const [label,detail]=data.nodes[index];
+      const group=makeSvg("g",{class:"tech-graph-node","data-node":label});
+      group.append(makeSvg("rect",{x:pos.x,y:pos.y,width:pos.w,height:pos.h,rx:9}));
+      addText(group,pos.x+pos.w/2,pos.y+25,label,"");
+      addText(group,pos.x+pos.w/2,pos.y+43,detail,"node-index");
+      graph.append(group);
+    });
+    const rootGroup=makeSvg("g",{class:"tech-graph-node tech-graph-root"});
+    rootGroup.append(makeSvg("rect",{x:root.x,y:root.y,width:root.w,height:root.h,rx:12}));
+    addText(rootGroup,root.cx,root.cy-5,data.root,"");
+    addText(rootGroup,root.cx,root.cy+17,"SELECTED TECHNOLOGY","node-index");
+    graph.append(rootGroup);
+  }
+
+  function centerTechnology(key) {
+    const orderedBefore = getButtonsInVisualOrder();
+    const selected = orderedBefore.find(button => button.dataset.techSelect === key);
+    if (!selected) return;
+    const before = new Map(orderedBefore.map(button => [button,button.getBoundingClientRect().left]));
+    const mid = Math.floor(orderedBefore.length/2);
+    const selectedIndex = orderedBefore.indexOf(selected);
+    const start = (selectedIndex - mid + orderedBefore.length) % orderedBefore.length;
+    const order = orderedBefore.slice(start).concat(orderedBefore.slice(0,start));
+    order.forEach(button => wheel.append(button));
+    if (!reducedMotion) {
+      order.forEach(button => {
+        const delta = before.get(button) - button.getBoundingClientRect().left;
+        if (Math.abs(delta) > 1 && typeof button.animate === "function") {
+          button.animate([{transform:"translateX("+delta+"px)"},{transform:"translateX(0)"}],{duration:620,easing:"cubic-bezier(.22,.61,.36,1)"});
+        }
+      });
+    }
+    if (window.matchMedia("(max-width: 1000px)").matches || wheel.scrollWidth > wheel.clientWidth) {
+      const wheelRect = wheel.getBoundingClientRect();
+      const buttonRect = selected.getBoundingClientRect();
+      const delta = buttonRect.left + buttonRect.width/2 - (wheelRect.left + wheelRect.width/2);
+      wheel.scrollTo({left:wheel.scrollLeft + delta,behavior:reducedMotion?"auto":"smooth"});
+    }
+  }
+
+  function selectTechnology(key,shouldScroll=true) {
+    const data=views[key] || views.overview;
+    explorer.hidden=false;
+    if (key !== "overview") centerTechnology(key);
+    techButtons.forEach(button=>{
+      const active=button.dataset.techSelect===key;
+      button.classList.toggle("active",active);
+      button.setAttribute("aria-expanded",String(active));
+      button.setAttribute("aria-pressed",String(active));
+    });
+    overviewTrigger.classList.toggle("active",key==="overview");
+    overviewTrigger.setAttribute("aria-expanded",String(key==="overview"));
+    const type=document.getElementById("tech-map-type");
+    const title=document.getElementById("tech-map-title");
+    const description=document.getElementById("tech-map-description");
+    const tags=document.getElementById("tech-map-tags");
+    if(type)type.textContent=data.type;
+    if(title)title.textContent=data.title;
+    if(description)description.textContent=data.description;
+    if(tags){
+      tags.replaceChildren();
+      data.tags.forEach(tag=>{
+        const chip=document.createElement("span");
+        chip.className="tech-map-tag";
+        chip.textContent=tag;
+        tags.append(chip);
+      });
+    }
+    drawView(data);
+    if(shouldScroll)requestAnimationFrame(()=>explorer.scrollIntoView({behavior:reducedMotion?"auto":"smooth",block:"center"}));
+  }
+  techButtons.forEach(button=>button.addEventListener("click",()=>selectTechnology(button.dataset.techSelect,true)));
+  overviewTrigger.addEventListener("click",()=>selectTechnology("overview",true));
+  if(closeButton)closeButton.addEventListener("click",()=>{
+    explorer.hidden=true;
+    overviewTrigger.setAttribute("aria-expanded","false");
+    techButtons.forEach(button=>button.setAttribute("aria-expanded","false"));
+    overviewTrigger.focus();
+  });
+})(); 
+
+/* Repeatable section reveals + a slower-moving layered backdrop. */
+(() => {
+  const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (motionPreference.matches) return;
+
+  const targets = Array.from(document.querySelectorAll(
+    "main > .section-block, main > .proof-strip, main > .contact-section"
+  ));
+
+  if ("IntersectionObserver" in window) {
+    document.documentElement.classList.add("has-scroll-motion");
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        // Toggle both ways so the reveal replays each time a section re-enters.
+        entry.target.classList.toggle("is-visible", entry.isIntersecting);
+      });
+    }, { threshold: 0.04, rootMargin: "0px 0px -7% 0px" });
+
+    targets.forEach(target => {
+      target.classList.add("scroll-reveal");
+      observer.observe(target);
     });
   }
-  skillButtons.forEach(button=>{
-    button.addEventListener("click",()=>{
-      const panel=document.getElementById(button.getAttribute("aria-controls"));
-      if(!panel)return;
-      const willOpen=panel.hidden;
-      closeSkills(button);
-      panel.hidden=!willOpen;
-      button.setAttribute("aria-expanded",String(willOpen));
-      button.closest(".skill-card").classList.toggle("is-open",willOpen);
-    });
-  });
-  document.addEventListener("click",event=>{
-    if(!event.target.closest("#skills .skill-grid"))closeSkills(null);
-  });
-  document.addEventListener("keydown",event=>{
-    if(event.key==="Escape"){
-      closeSkills(null);
-      if(explorer&&!explorer.hidden&&closeMap)closeMap.click();
+
+  // The page content moves at the normal scroll rate; the backdrop lags behind.
+  let framePending = false;
+  const updateParallax = () => {
+    const offset = window.scrollY || window.pageYOffset || 0;
+    const reduced = motionPreference.matches;
+    const glowShift = reduced ? 0 : -Math.min(offset * 0.18, 1800);
+    const textureShift = reduced ? 0 : -Math.min(offset * 0.085, 850);
+    const root = document.documentElement;
+    root.style.setProperty("--parallax-y", glowShift + "px");
+    root.style.setProperty("--parallax-texture-y", textureShift + "px");
+    framePending = false;
+  };
+
+  window.addEventListener("scroll", () => {
+    if (!framePending) {
+      framePending = true;
+      window.requestAnimationFrame(updateParallax);
+    }
+  }, { passive: true });
+
+  motionPreference.addEventListener?.("change", event => {
+    if (event.matches) {
+      document.documentElement.classList.remove("has-scroll-motion");
+      document.documentElement.style.setProperty("--parallax-y", "0px");
+      document.documentElement.style.setProperty("--parallax-texture-y", "0px");
+      targets.forEach(target => {
+        target.classList.remove("scroll-reveal", "is-visible");
+      });
+    } else {
+      // Reloading initializes the observer and background transforms cleanly.
+      window.location.reload();
     }
   });
+
+  updateParallax();
+})();
+
+
+/* Skills interactions: desktop overlay preview + mobile in-flow accordion. */
+(() => {
+  const section = document.querySelector("#skills");
+  const grid = section?.querySelector(".skill-grid");
+  const cards = Array.from(section?.querySelectorAll(".skill-card") || []);
+  const overlay = document.querySelector("#skillOverlay");
+  const overlayIndex = document.querySelector("#skillOverlayIndex");
+  const overlayTitle = document.querySelector("#skillOverlayTitle");
+  const overlayChips = document.querySelector("#skillOverlayChips");
+  const closeButton = document.querySelector("#skillOverlayClose");
+  if (!grid || !cards.length || !overlay || !overlayIndex || !overlayTitle || !overlayChips || !closeButton) return;
+
+  const isMobileLayout = () => window.matchMedia("(max-width: 650px)").matches;
+  const canHover = () => !isMobileLayout() && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  let hoverTimer = null;
+  let activeCard = null;
+  let pinned = false;
+
+  const clearHoverTimer = () => {
+    if (hoverTimer !== null) {
+      window.clearTimeout(hoverTimer);
+      hoverTimer = null;
+    }
+  };
+
+  const setMobileOpen = (card, open) => {
+    const button = card.querySelector(".skill-card-trigger");
+    const panel = card.querySelector(".skill-tools");
+    card.classList.toggle("is-open", open);
+    if (button) button.setAttribute("aria-expanded", String(open));
+    if (panel) {
+      panel.hidden = !open;
+      panel.setAttribute("aria-hidden", String(!open));
+    }
+  };
+
+  const hideOverlay = () => {
+    clearHoverTimer();
+    overlay.hidden = true;
+    overlay.setAttribute("aria-hidden", "true");
+    cards.forEach((card) => {
+      card.classList.remove("is-active");
+      const button = card.querySelector(".skill-card-trigger");
+      if (button) button.setAttribute("aria-expanded", "false");
+    });
+    activeCard = null;
+    pinned = false;
+  };
+
+  const showOverlay = (card, keepOpen) => {
+    clearHoverTimer();
+    if (!card) return;
+    activeCard = card;
+    pinned = keepOpen;
+    cards.forEach((other) => {
+      other.classList.toggle("is-active", other === card);
+      const button = other.querySelector(".skill-card-trigger");
+      if (button) button.setAttribute("aria-expanded", String(other === card));
+    });
+    overlayIndex.textContent = card.querySelector(".skill-index")?.textContent.trim() || "";
+    overlayTitle.textContent = card.querySelector(".skill-title")?.textContent.trim() || "";
+    const chips = card.querySelector(".skill-tool-chips");
+    overlayChips.innerHTML = chips ? chips.innerHTML : "";
+    overlay.hidden = false;
+    overlay.setAttribute("aria-hidden", "false");
+  };
+
+  cards.forEach((card) => {
+    const button = card.querySelector(".skill-card-trigger");
+    const panel = card.querySelector(".skill-tools");
+    if (!button || !panel) return;
+    setMobileOpen(card, false);
+
+    button.addEventListener("click", () => {
+      if (isMobileLayout() || !canHover()) {
+        const willOpen = !card.classList.contains("is-open");
+        cards.forEach((other) => setMobileOpen(other, false));
+        setMobileOpen(card, willOpen);
+        return;
+      }
+      showOverlay(card, true);
+    });
+
+    card.addEventListener("pointerenter", (event) => {
+      if (!canHover() || event.pointerType === "touch" || pinned) return;
+      clearHoverTimer();
+      // A brief delay keeps quick clicks on the category button working naturally.
+      hoverTimer = window.setTimeout(() => showOverlay(card, false), 460);
+    });
+  });
+
+  grid.addEventListener("pointerleave", () => {
+    clearHoverTimer();
+    if (canHover() && !pinned) hideOverlay();
+  });
+
+  overlay.addEventListener("pointerenter", clearHoverTimer);
+  overlay.addEventListener("click", (event) => {
+    if (event.target.closest(".skill-overlay-close")) return;
+    // Clicking the preview keeps it open until dismissed.
+    pinned = true;
+  });
+
+  closeButton.addEventListener("click", hideOverlay);
+  document.addEventListener("pointerdown", (event) => {
+    if (!overlay.hidden && pinned && !grid.contains(event.target)) hideOverlay();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    if (isMobileLayout()) {
+      const openCard = cards.find((card) => card.classList.contains("is-open"));
+      if (openCard) {
+        setMobileOpen(openCard, false);
+        openCard.querySelector(".skill-card-trigger")?.focus();
+      }
+    } else if (!overlay.hidden) {
+      hideOverlay();
+      activeCard?.querySelector(".skill-card-trigger")?.focus();
+    }
+  });
+
+  hideOverlay();
+})();
+
+
+/* In-page screenshot lightbox — 2026-11-02 */
+(() => {
+  const dialog = document.querySelector("#evidenceLightbox");
+  const image = document.querySelector("#evidenceLightboxImage");
+  const caption = document.querySelector("#evidenceLightboxCaption");
+  const closeButton = document.querySelector("#evidenceLightboxClose");
+  const triggers = Array.from(document.querySelectorAll(".evidence-screenshot-trigger"));
+
+  if (!dialog || !image || !caption || !closeButton || !triggers.length) return;
+  if (typeof dialog.showModal !== "function") {
+    // Preserve keyboard and browser fallback behaviour if native dialogs are unavailable.
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        window.open(trigger.dataset.screenshotSrc, "_blank", "noopener,noreferrer");
+      });
+    });
+    return;
+  }
+
+  let activeTrigger = null;
+
+  const closeViewer = () => {
+    if (dialog.open) dialog.close();
+  };
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      const source = trigger.dataset.screenshotSrc;
+      if (!source) return;
+
+      activeTrigger = trigger;
+      image.src = source;
+      image.alt = trigger.dataset.screenshotAlt || "Project evidence screenshot";
+      caption.textContent = trigger.dataset.screenshotCaption || "Project evidence";
+
+      if (!dialog.open) dialog.showModal();
+    });
+  });
+
+  closeButton.addEventListener("click", closeViewer);
+  image.addEventListener("click", closeViewer);
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) closeViewer();
+  });
+
+  dialog.addEventListener("close", () => {
+    image.removeAttribute("src");
+    if (activeTrigger?.isConnected) activeTrigger.focus();
+    activeTrigger = null;
+  });
+})();
+
+
+/* Ambient soundtrack: best-effort autoplay with a very slow, gentle fade-in. */
+(() => {
+  const player = document.getElementById("ambientAudio");
+  const audio = document.getElementById("ambientAudioTrack");
+  const toggle = document.getElementById("ambientAudioToggle");
+  const volume = document.getElementById("ambientAudioVolume");
+  if (!player || !audio || !toggle || !volume) return;
+
+  const MAX_VOLUME = 0.12;
+  const FADE_DURATION_MS = 35000;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let fadeFrame = 0;
+  let fadeStartedAt = 0;
+  let startVolume = 0;
+
+  audio.loop = true;
+  audio.volume = 0;
+  audio.muted = true;
+
+  const selectedVolume = () => Math.min(MAX_VOLUME, Number(volume.value) / 100 * MAX_VOLUME);
+  const setPlayingUi = (playing) => {
+    player.classList.toggle("is-playing", playing);
+    toggle.setAttribute("aria-pressed", String(playing));
+    toggle.setAttribute("aria-label", playing ? "Pause background music" : "Play background music");
+    const label = toggle.querySelector(".ambient-audio-label");
+    if (label) label.textContent = playing ? "Music playing" : "Ambient audio";
+  };
+  const stopFade = () => {
+    if (fadeFrame) cancelAnimationFrame(fadeFrame);
+    fadeFrame = 0;
+  };
+  const fadeUp = () => {
+    stopFade();
+    const target = selectedVolume();
+    if (reducedMotion) {
+      audio.volume = target;
+      return;
+    }
+    fadeStartedAt = performance.now();
+    startVolume = audio.volume;
+    const tick = (now) => {
+      const progress = Math.min(1, (now - fadeStartedAt) / FADE_DURATION_MS);
+      // Ease-in keeps the opening moments especially quiet.
+      const eased = progress * progress;
+      audio.volume = Math.min(MAX_VOLUME, startVolume + (target - startVolume) * eased);
+      if (progress < 1 && !audio.paused) fadeFrame = requestAnimationFrame(tick);
+      else fadeFrame = 0;
+    };
+    fadeFrame = requestAnimationFrame(tick);
+  };
+  const fadeToVolume = () => {
+    stopFade();
+    const target = selectedVolume();
+    if (audio.paused) return;
+    if (reducedMotion) {
+      audio.volume = target;
+      return;
+    }
+    fadeStartedAt = performance.now();
+    startVolume = audio.volume;
+    const tick = (now) => {
+      const progress = Math.min(1, (now - fadeStartedAt) / 700);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      audio.volume = Math.max(0, Math.min(MAX_VOLUME, startVolume + (target - startVolume) * eased));
+      if (progress < 1 && !audio.paused) fadeFrame = requestAnimationFrame(tick);
+      else fadeFrame = 0;
+    };
+    fadeFrame = requestAnimationFrame(tick);
+  };
+  const startPlayback = async ({ fromGesture = false } = {}) => {
+    try {
+      stopFade();
+      audio.volume = 0;
+      audio.muted = !fromGesture;
+      await audio.play();
+      // Muted autoplay is broadly permitted; once playback starts, reveal sound
+      // gradually. A visitor gesture also permits audible playback directly.
+      audio.muted = false;
+      setPlayingUi(true);
+      fadeUp();
+      return true;
+    } catch (error) {
+      setPlayingUi(false);
+      const label = toggle.querySelector(".ambient-audio-label");
+      if (label) label.textContent = "Tap to play";
+      return false;
+    }
+  };
+
+  toggle.addEventListener("click", async () => {
+    if (!audio.paused) {
+      stopFade();
+      audio.pause();
+      audio.volume = 0;
+      setPlayingUi(false);
+      return;
+    }
+    await startPlayback({ fromGesture: true });
+  });
+  volume.addEventListener("input", fadeToVolume);
+  audio.addEventListener("pause", () => setPlayingUi(false));
+  audio.addEventListener("play", () => setPlayingUi(true));
+
+  // Attempt autoplay after the document has loaded. Browsers may still require
+  // a visitor gesture before allowing audible playback.
+  startPlayback();
 })();
