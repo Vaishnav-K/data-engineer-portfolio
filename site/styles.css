@@ -2872,3 +2872,54 @@ body {
   display: block;
   overflow: visible;
 }
+
+
+/* Matching Option 1 logo and wordmark in navbar and footer. */
+.brand-with-wordmark {
+  width: auto !important;
+  min-width: 0 !important;
+  gap: 11px !important;
+  align-items: center;
+}
+.brand-with-wordmark .brand-gradient-mark {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  display: grid;
+  place-items: center;
+  padding: 5px;
+  border: 1px solid rgba(104, 198, 255, .22);
+  border-radius: 11px;
+  background: linear-gradient(145deg, rgba(7, 29, 55, .96), rgba(24, 13, 49, .96));
+  box-shadow: 0 0 16px rgba(34,150,232,.11), 0 0 18px rgba(135,76,225,.12), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.brand-with-wordmark .brand-gradient-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.brand-with-wordmark .brand-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  font-size: 11px;
+  letter-spacing: .1em;
+}
+.brand-with-wordmark .brand-role {
+  color: #aebbd1;
+  font-weight: 700;
+  letter-spacing: .075em;
+}
+.site-footer .brand-with-wordmark .brand-gradient-mark {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+}
+@media (max-width: 560px) {
+  .site-header .brand-with-wordmark { gap: 8px !important; }
+  .site-header .brand-with-wordmark .brand-name { font-size: 9px; gap: 5px; letter-spacing: .07em; }
+  .site-header .brand-with-wordmark .brand-gradient-mark { width: 34px; height: 34px; min-width: 34px; }
+  .site-footer .brand-with-wordmark { flex-wrap: wrap; }
+}
