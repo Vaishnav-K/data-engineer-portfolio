@@ -513,6 +513,23 @@
     </span>
   </span><span class="brand-name">VAISHNAV K<span class="brand-divider">|</span><span class="brand-role">DATA ENGINEER</span></span></a><span>Senior Data Engineer · Chennai, India</span><a href="#home">Back to top ↑</a></footer>
 g>
-  <script src="script.js?v=20261102-hero-lightbox"></script>
+  <aside class="ambient-audio" id="ambientAudio" aria-label="Background music controls">
+    <audio id="ambientAudioTrack" preload="none" loop playsinline>
+      <source src="assets/cinematic-space-drone-10623.mp3" type="audio/mpeg">
+    </audio>
+    <button class="ambient-audio-toggle" id="ambientAudioToggle" type="button"
+      aria-label="Play background music" aria-pressed="false">
+      <svg class="audio-icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.8v12.4L18 12 8 5.8Z"/></svg>
+      <svg class="audio-icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 5.5h3v13h-3zM13.5 5.5h3v13h-3z"/></svg>
+      <span class="ambient-audio-label">Ambient audio</span>
+    </button>
+    <label class="ambient-audio-volume">
+      <span class="sr-only">Music volume</span>
+      <input id="ambientAudioVolume" type="range" min="0" max="100" value="18"
+        aria-label="Music volume">
+    </label>
+    <span class="ambient-audio-credit">Cinematic Space Drone · Good_B_Music · <a href="https://pixabay.com/music/ambient-cinematic-space-drone-10623/" target="_blank" rel="noopener noreferrer">Pixabay</a></span>
+  </aside>
+  <script src="script.js?v=20261103-ambient-audio"></script>
 </body>
 </html>
