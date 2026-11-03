@@ -2842,3 +2842,33 @@ body {
     font-size: clamp(28px, 7vw, 35px) !important;
   }
 }
+
+
+/* Standalone Option 1 monogram in the main navbar. */
+.brand-icon-only {
+  gap: 0 !important;
+  width: 42px;
+  min-width: 42px;
+  justify-content: flex-start;
+}
+.brand-icon-only .brand-mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  padding: 5px;
+  border: 1px solid rgba(104, 198, 255, .22);
+  border-radius: 12px;
+  background:
+    linear-gradient(145deg, rgba(7, 29, 55, .96), rgba(24, 13, 49, .96));
+  box-shadow:
+    0 0 18px rgba(34, 150, 232, .12),
+    0 0 20px rgba(135, 76, 225, .13),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+.brand-icon-only .brand-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
