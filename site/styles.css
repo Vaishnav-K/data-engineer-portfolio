@@ -3141,3 +3141,79 @@ body {
     min-width: 0 !important;
   }
 }
+
+
+/* 2026-11-04: targeted mobile layout corrections; desktop rules remain unchanged. */
+@media screen and (max-width: 650px) {
+  .hero-visual,
+  .profile-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  .profile-card {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .profile-image-wrap {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 4 / 5 !important;
+    overflow: hidden !important;
+  }
+  .profile-image {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center 22% !important;
+  }
+  .profile-info {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 22px !important;
+  }
+
+  /* Three narrow KPI columns caused the large values to collide with labels. */
+  .scale-panel .dataset-kpis.dataset-quality-kpis.benchmark-kpis {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+  .scale-panel .dataset-kpis.dataset-quality-kpis.benchmark-kpis > div {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 14px 15px !important;
+    gap: 5px !important;
+  }
+  .scale-panel .dataset-kpis.dataset-quality-kpis.benchmark-kpis > div > span {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+    overflow-wrap: anywhere;
+  }
+  .scale-panel .dataset-kpis.dataset-quality-kpis.benchmark-kpis > div > strong {
+    display: block !important;
+    max-width: 100% !important;
+    font-size: clamp(22px, 7vw, 29px) !important;
+    line-height: 1.2 !important;
+    letter-spacing: -.035em !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+  .scale-panel .dataset-kpis.dataset-quality-kpis.benchmark-kpis > div > small {
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+  }
+}
+
+/* A slower, less frequent V/K logo turn across the site. */
+.brand-mark-flipper {
+  animation-duration: 4.8s !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark-flipper {
+    animation: none !important;
+  }
+}
